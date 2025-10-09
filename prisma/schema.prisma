@@ -46,29 +46,30 @@ model Address {
 }
 
 model VeterinaryClinic {
-  id                  String    @id @default(uuid()) @db.Uuid
-  socialNumber        String    @unique @db.VarChar(14)
-  socialName          String    @db.VarChar(255)
-  tradeName           String    @db.VarChar(255)
-  stateRegistration   String?   @db.VarChar(20)
-  municipalRegistration String? @db.VarChar(20)
-  email               String    @db.VarChar(255)
-  phone               String    @db.VarChar(15)
-  cellphone           String?   @db.VarChar(15)
-  crmv                String    @db.VarChar(20)
-  crmvState           Int       @db.Integer
-  technicalManager    String    @db.VarChar(255)
-  managerCrmv         String    @db.VarChar(20)
-  openingTime         String?   @db.VarChar(5)
-  closingTime         String?   @db.VarChar(5)
-  emergencyService    Boolean   @default(false)
-  observations        String?   @db.Text
-  active              Boolean   @default(true)
-  addressId           String    @db.Uuid
-  address             Address   @relation(fields: [addressId], references: [id])
-  users               User[]
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  id                          String    @id @default(uuid()) @db.Uuid
+  socialNumber                String    @unique @db.VarChar(14)
+  socialName                  String    @db.VarChar(255)
+  tradeName                   String?   @db.VarChar(255)
+  stateRegistration           String?   @db.VarChar(20)
+  municipalRegistration       String?   @db.VarChar(20)
+  email                       String    @db.VarChar(255)
+  phone                       String?   @db.VarChar(15)
+  cellphone                   String?   @db.VarChar(15)
+  crmv                        String?   @db.VarChar(20)
+  crmvState                   Int?      @db.Integer
+  technicalManager            String?   @db.VarChar(255)
+  managerCrmv                 String?   @db.VarChar(20)
+  openingTime                 String?   @db.VarChar(5)
+  closingTime                 String?   @db.VarChar(5)
+  emergencyService            Boolean?  @default(false)
+  observations                String?   @db.Text
+  active                      Boolean   @default(true)
+  addressId                   String?    @db.Uuid
+  address                     Address?   @relation(fields: [addressId], references: [id])
+  users                       User[]
+  clinicPlan                  ClinicPlan[]
+  createdAt                   DateTime  @default(now())
+  updatedAt                   DateTime  @updatedAt
 
   @@map("veterinary_clinics")
 }
@@ -104,3 +105,29 @@ model PetUser {
   @@map("pet_users")
 }
 
+model Plan {
+  id                 String    @id @default(uuid()) @db.Uuid
+  name               String    @db.VarChar(255)
+  description        String?   @db.Text
+  price              Float
+  billingPeriod      String     @default("MONTHLY") // criar enumerador
+  maxUsers           Int?      // número máximo de usuários que a clínica pode ter
+  active             Boolean   @default(true)
+  clinicPlan         ClinicPlan[]
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+}
+
+model ClinicPlan {
+  id                 String                 @id @default(uuid()) @db.Uuid
+  active             Boolean                @default(true)
+  veterinaryClinicId String                 @db.Uuid
+  veterinaryClinic   VeterinaryClinic       @relation(fields: [veterinaryClinicId], references: [id])
+  planId             String                 @db.Uuid
+  plan               Plan                   @relation(fields: [planId], references: [id])
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  @@unique([veterinaryClinicId, planId])
+
+}

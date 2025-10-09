@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE "veterinary_clinics" ALTER COLUMN "tradeName" DROP NOT NULL,
+ALTER COLUMN "phone" DROP NOT NULL,
+ALTER COLUMN "crmv" DROP NOT NULL,
+ALTER COLUMN "crmvState" DROP NOT NULL,
+ALTER COLUMN "technicalManager" DROP NOT NULL,
+ALTER COLUMN "managerCrmv" DROP NOT NULL,
+ALTER COLUMN "emergencyService" DROP NOT NULL;
