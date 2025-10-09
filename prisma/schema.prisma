@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String            @id @default(uuid()) @db.Uuid
+  name                String
+  email               String            @unique
+  password            String
+  document            String?
+  status              Boolean           @default(true)
+  role                Int
+  jumper              Int
+  veterinaryClinicId  String?           @db.Uuid
+  veterinaryClinic    VeterinaryClinic? @relation(fields: [veterinaryClinicId], references: [id])
+  petUsers            PetUser[]
+  createdAt           DateTime          @default(now())
+}
+
+model Address {
+  id              String                @id @default(uuid()) @db.Uuid
+  cep             String                @db.VarChar(8)
+  street          String                @db.VarChar(255)
+  number          String                @db.VarChar(10)
+  complement      String?               @db.VarChar(255)
+  neighborhood    String                @db.VarChar(100)
+  city            String                @db.VarChar(100)
+  state           Int                   @db.Integer
+  country         String                @default("Brasil") @db.VarChar(100)
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  veterinaryClinics VeterinaryClinic[]
+
+  @@map("addresses")
+}
+
+model VeterinaryClinic {
+  id                  String    @id @default(uuid()) @db.Uuid
+  socialNumber        String    @unique @db.VarChar(14)
+  socialName          String    @db.VarChar(255)
+  tradeName           String    @db.VarChar(255)
+  stateRegistration   String?   @db.VarChar(20)
+  municipalRegistration String? @db.VarChar(20)
+  email               String    @db.VarChar(255)
+  phone               String    @db.VarChar(15)
+  cellphone           String?   @db.VarChar(15)
+  crmv                String    @db.VarChar(20)
+  crmvState           Int       @db.Integer
+  technicalManager    String    @db.VarChar(255)
+  managerCrmv         String    @db.VarChar(20)
+  openingTime         String?   @db.VarChar(5)
+  closingTime         String?   @db.VarChar(5)
+  emergencyService    Boolean   @default(false)
+  observations        String?   @db.Text
+  active              Boolean   @default(true)
+  addressId           String    @db.Uuid
+  address             Address   @relation(fields: [addressId], references: [id])
+  users               User[]
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@map("veterinary_clinics")
+}
+
+model Pet {
+  id              String    @id @default(uuid()) @db.Uuid
+  name            String    @db.VarChar(100)
+  species         String    @db.VarChar(50)
+  breed           Int       @db.Integer
+  gender          String    @db.VarChar(10)
+  birthDate       DateTime?
+  color           String?   @db.VarChar(50)
+  weight          Float?
+  microchipNumber String?   @unique @db.VarChar(15)
+  observations    String?   @db.Text
+  active          Boolean   @default(true)
+  petUsers        PetUser[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("pets")
+}
+
+model PetUser {
+  id               String   @id @default(uuid()) @db.Uuid
+  userId           String   @db.Uuid
+  petId            String   @db.Uuid
+  user             User     @relation(fields: [userId], references: [id])
+  pet              Pet      @relation(fields: [petId], references: [id])
+  createdAt        DateTime @default(now())
+
+  @@unique([userId, petId])
+  @@map("pet_users")
+}
+
