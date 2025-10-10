@@ -42,7 +42,6 @@ model Address {
   updatedAt       DateTime              @updatedAt
   veterinaryClinics VeterinaryClinic[]
 
-  @@map("addresses")
 }
 
 model VeterinaryClinic {
@@ -71,7 +70,6 @@ model VeterinaryClinic {
   createdAt                   DateTime  @default(now())
   updatedAt                   DateTime  @updatedAt
 
-  @@map("veterinary_clinics")
 }
 
 model Pet {
@@ -89,8 +87,6 @@ model Pet {
   petUsers        PetUser[]
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
-
-  @@map("pets")
 }
 
 model PetUser {
@@ -102,7 +98,6 @@ model PetUser {
   createdAt        DateTime @default(now())
 
   @@unique([userId, petId])
-  @@map("pet_users")
 }
 
 model Plan {
