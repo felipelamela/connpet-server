@@ -24,6 +24,10 @@ export class ErrorResponseInterceptor implements NestInterceptor {
             method: ctx.getRequest().method,
           });
         }
+
+
+
+        
       }),
     );
   }
