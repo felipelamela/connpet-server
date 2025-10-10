@@ -4,11 +4,11 @@ import { CreateClinicVetDto } from './dto/create-clinic-vet.dto';
 import { UpdateClinicVetDto } from './dto/update-clinic-vet.dto';
 import { SuccessResponse } from 'src/response/successResponse';
 import { ErrorResponse } from 'src/response/errorResponse';
-import { ErrorEnum } from 'src/emum/error.enum';
+import { ErrorEnum } from 'src/enum/error.enum';
 
 @Controller('clinic-vet')
 export class ClinicVetController {
-  constructor(private readonly clinicVetService: ClinicVetService) {}
+  constructor(private readonly clinicVetService: ClinicVetService) { }
 
   @Post()
   async create(@Body() createClinicVetDto: CreateClinicVetDto) {
@@ -16,7 +16,7 @@ export class ClinicVetController {
       const newClinic = await this.clinicVetService.create(createClinicVetDto);
       return new SuccessResponse('Clinica criada com sucesso', newClinic);
     } catch (error) {
-      return new ErrorResponse(error.message, 404,  ErrorEnum.USER_CREATE_ERROR)
+      return new ErrorResponse(error.message, 404, ErrorEnum.USER_CREATE_ERROR)
     }
   }
 
