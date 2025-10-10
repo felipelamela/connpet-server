@@ -11,7 +11,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class CreateVeterinaryClinicDto {
+export class CreateClinicVetDto {
   @IsString()
   @Length(14, 14, { message: 'CNPJ deve ter 14 caracteres' })
   socialNumber: string;
@@ -99,7 +99,7 @@ export class CreateVeterinaryClinicDto {
   @IsBoolean()
   active?: boolean;
 
-  @IsUUID()
-  @IsOptional()
-  addressId?: string;
+  // @IsUUID()
+  // @IsOptional()
+  // addressId?: string;
 }

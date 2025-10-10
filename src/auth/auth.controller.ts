@@ -17,11 +17,9 @@ export class AuthController {
   }
 
   @Post('new-user')
-  async createNewUser(
-    @Body() createNewUser: CreateNewUserDTO,
-  ) {
+  async createNewUser(@Body() createNewUser: CreateNewUserDTO) {
     try {
-    const newUser = await this.authService.create(createNewUser);
+      const newUser = await this.authService.create(createNewUser);
       return new SuccessResponse('Usuário criado com sucesso', newUser);
     } catch (error) {
       return new ErrorResponse(error.message, 404,  ErrorEnum.USER_CREATE_ERROR)}
