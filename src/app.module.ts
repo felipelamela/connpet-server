@@ -7,11 +7,11 @@ import { ClinicVetModule } from './clinic-vet/clinic-vet.module';
 import { PlansModule } from './plans/plans.module';
 import { ConfigModule } from '@nestjs/config';
 import { AddressModule } from './address/address.module';
-import { UserModule } from './user/user.module';
 import { PaymentsModule } from './payments/payments.module';
 import { PetModule } from './pet/pet.module';
 import { TutorModule } from './tutor/tutor.module';
 import { AppointmentModule } from './appointment/appointment.module';
+import { ClinicVetUserModule } from './clinic-vet/modules/clinic-vet-user/clinic-vet-user.module';
 
 @Module({
   imports: [
@@ -24,11 +24,11 @@ import { AppointmentModule } from './appointment/appointment.module';
     ClinicVetModule,
     PlansModule,
     AddressModule,
-    UserModule,
     PaymentsModule,
     PetModule,
     TutorModule,
-    AppointmentModule],
+    AppointmentModule,
+    ClinicVetUserModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,33 +1,47 @@
 import { Injectable } from '@nestjs/common';
-import { RandomJumper } from '../system/randomJumper';
 import { generateRandomPassword } from '../system/generateRandomPassword';
-import { PrismaService } from '../prisma/prisma.service';
-import * as bcrypt from 'bcrypt';
 import { CreateTutorDTO } from './dto/create-tutor.dto';
 import { UpdateTutorDto } from './dto/update-tutor.dto';
+import TutorRepository from './tutor.repository';
+import AddressEntity from '../address/entity/address.entity';
+import { AddressService } from '../address/address.service';
+import { UserService } from '../user/user.service';
+import { UserEntity } from '../user/entities/user.entity';
 
 
 @Injectable()
 export class TutorService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(
+    private readonly tutorResository: TutorRepository,
+    private readonly addressService: AddressService,
+    private readonly userService: UserService
+  ) { }
 
   async create(createTutorDto: CreateTutorDTO) {
     try {
-      const jumper = RandomJumper();
       const passwordTutor = generateRandomPassword()
-      const password = await bcrypt.hash(passwordTutor, jumper);
 
-      //adicionar funcionalidade de envio de email após criação da conta do tutor
-      return "";
+      const addressEntity = new AddressEntity(createTutorDto)
+      const userEntity = new UserEntity({ ...createTutorDto, password: passwordTutor, status: true })
+
+      const [addressId, userId] = await Promise.all([
+        this.addressService.create(addressEntity),
+        this.userService.create(userEntity)
+      ])
+
+      const tutorId = await this.tutorResository.create({
+        addressId: addressId.id,
+        userId: userId.id,
+        document: createTutorDto.document ? createTutorDto.document : null,
+        phone: createTutorDto.phone ? createTutorDto.phone : null
+
+      })
+
+      return tutorId;
     } catch (error) {
       throw Error("Erro ao criar usuário");
     }
   }
-
-  findAll() {
-    return `This action returns all tutor`;
-  }
-
   findOne(id: number) {
   }
 

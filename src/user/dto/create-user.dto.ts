@@ -14,10 +14,4 @@ export class CreateUserDTO {
   @IsNotEmpty({ message: 'A senha é obrigatória.' })
   password: string;
 
-  @IsOptional()
-  @IsString()
-  document?: string;
-
-  @IsInt({ message: 'O campo role deve ser um número inteiro.' })
-  role: number;
 }

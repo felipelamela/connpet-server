@@ -10,7 +10,7 @@ export class AuthUserPresenter {
   petUsers: []
   constructor(user: User) {
     this.id = user.id;
-    this.name = user.name,
-      this.email = user.email
+    this.name = user.name;
+    this.email = user.email;
   }
 }

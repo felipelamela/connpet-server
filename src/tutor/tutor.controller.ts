@@ -12,11 +12,6 @@ export class TutorController {
     return this.tutorService.create(createTutorDto);
   }
 
-  @Get()
-  findAll() {
-    return this.tutorService.findAll();
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.tutorService.findOne(+id);

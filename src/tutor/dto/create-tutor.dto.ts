@@ -13,6 +13,10 @@ export class CreateTutorDTO {
   @IsString()
   document?: string;
 
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
   @IsString()
   @IsNotEmpty({ message: 'O CEP é obrigatório.' })
   @Length(8, 8, { message: 'O CEP deve conter exatamente 8 dígitos (somente números).' })

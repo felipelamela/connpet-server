@@ -99,7 +99,7 @@ export class CreateClinicVetDto {
   @IsBoolean()
   active?: boolean;
 
-  // @IsUUID()
-  // @IsOptional()
-  // addressId?: string;
+  @IsUUID()
+  @IsOptional()
+  addressId?: string;
 }

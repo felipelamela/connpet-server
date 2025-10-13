@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { EstadoEnum } from '../enum/estado.enum';
 
 @Injectable()
 export class AddressService {
@@ -9,8 +10,13 @@ export class AddressService {
 
   async create(createAddressDto: CreateAddressDto) {
     try {
-      // return await this.prisma.address.create({data:createAddressDto})
-      return true
+      const state = EstadoEnum[createAddressDto.state]
+      return await this.prisma.address.create({
+        data: {
+          ...createAddressDto,
+          state
+        }
+      })
     } catch {
       throw new Error("Erro ao cadastrar endereço")
     }
