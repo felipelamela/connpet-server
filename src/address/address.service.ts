@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { EstadoEnum } from '../enum/estado.enum';
+import { EstadoEnum } from '../commom/enum/estado.enum';
 
 @Injectable()
 export class AddressService {

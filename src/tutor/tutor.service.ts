@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { generateRandomPassword } from '../system/generateRandomPassword';
+import { generateRandomPassword } from '../commom/system/generateRandomPassword';
 import { CreateTutorDTO } from './dto/create-tutor.dto';
 import { UpdateTutorDto } from './dto/update-tutor.dto';
 import TutorRepository from './tutor.repository';

@@ -2,13 +2,15 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login.auth.dto';
 import { ErrorResponse } from 'src/response/errorResponse';
-import { ErrorEnum } from 'src/enum/error.enum';
+import { ErrorEnum } from 'src/commom/enum/error.enum';
 import { AuthUserPresenter } from './auth-user.presenter';
+import { Public } from '../commom/decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
+  @Public()
   @Post('login')
   async login(@Body() loginAuthDto: LoginAuthDto) {
     try {

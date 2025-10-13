@@ -5,31 +5,15 @@ import { ClinicVetHandlers } from './clinic-vet.handlers';
 
 @Injectable()
 export class ClinicVetService {
-  constructor(private readonly clinicVetHandlers: ClinicVetHandlers){}
-  
-  
+  constructor(private readonly clinicVetHandlers: ClinicVetHandlers) { }
+
+
   async create(createClinicVetDto: CreateClinicVetDto) {
     try {
       const createdClinic = await this.clinicVetHandlers.createClinic(createClinicVetDto)
-      return createdClinic  
+      return createdClinic
     } catch (error) {
       throw new Error(error.message)
     };
-  }
-
-  findAll() {
-    return `This action returns all clinicVet`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} clinicVet`;
-  }
-
-  update(id: number, updateClinicVetDto: UpdateClinicVetDto) {
-    return `This action updates a #${id} clinicVet`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} clinicVet`;
   }
 }

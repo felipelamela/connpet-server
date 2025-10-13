@@ -12,9 +12,17 @@ import { PetModule } from './pet/pet.module';
 import { TutorModule } from './tutor/tutor.module';
 import { AppointmentModule } from './appointment/appointment.module';
 import { ClinicVetUserModule } from './clinic-vet/modules/clinic-vet-user/clinic-vet-user.module';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './commom/guardians/jwt-auth.guardian';
 
 @Module({
   imports: [
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1h' },
+    }),
+
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -30,6 +38,12 @@ import { ClinicVetUserModule } from './clinic-vet/modules/clinic-vet-user/clinic
     AppointmentModule,
     ClinicVetUserModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule { }

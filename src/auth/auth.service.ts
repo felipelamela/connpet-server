@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { LoginAuthDto } from './dto/login.auth.dto';
-import { RandomJumper } from 'src/system/randomJumper';
+import { RandomJumper } from 'src/commom/system/randomJumper';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 

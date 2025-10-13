@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { FastifyReply } from 'fastify';
 import { ErrorResponse } from 'src/response/errorResponse';
-import logger from 'src/logger/logger';
+import logger from 'src/commom/logger/logger';
 
 @Injectable()
 export class ErrorResponseInterceptor implements NestInterceptor {
@@ -27,7 +27,7 @@ export class ErrorResponseInterceptor implements NestInterceptor {
 
 
 
-        
+
       }),
     );
   }
