@@ -5,11 +5,12 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AddressService {
-  constructor(private readonly prisma:PrismaService){}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(createAddressDto: CreateAddressDto) {
     try {
-      return await this.prisma.address.create({data:createAddressDto})
+      // return await this.prisma.address.create({data:createAddressDto})
+      return true
     } catch {
       throw new Error("Erro ao cadastrar endereço")
     }
@@ -18,7 +19,7 @@ export class AddressService {
   async findOne(id: string) {
     try {
       return await this.prisma.address.findFirst({
-        where:{id:id}
+        where: { id: id }
       })
     } catch {
       throw new Error("Erro ao buscar endereço")
@@ -26,25 +27,28 @@ export class AddressService {
   }
   async update(id: string, updateAddressDto: UpdateAddressDto) {
     try {
-      return await this.prisma.address.update({
-        where:{
-          id:id
-        },
-        data:updateAddressDto})
+      return true
+      // return await this.prisma.address.update({
+      // where: {
+      // id: id
+      // },
+      // data: updateAddressDto
+      // })
     } catch {
       throw new Error("Erro ao atualizar endereço")
-    }  
+    }
   }
 
   async remove(id: string) {
     try {
       return await this.prisma.address.delete({
-        where:{
-          id:id
-        }}
+        where: {
+          id: id
+        }
+      }
       )
     } catch {
       throw new Error("Erro ao deletar endereço")
-    }    
+    }
   }
 }

@@ -9,9 +9,9 @@ export class clinicVetRepository{
 
     async createClinic(create:CreateClinicVetDto){
         try {
-            return await this.prisma.veterinaryClinic.create({
-                data:create
-            })
+            // return await this.prisma.veterinaryClinic.create({
+            //     data:create
+            // })
         } catch (error) {
              throw new Error("Erro ao criar clinica")
         }

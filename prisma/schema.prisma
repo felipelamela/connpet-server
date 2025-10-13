@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,116 +7,364 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/////////////////////////////
+// Usuários
+/////////////////////////////
+
 model User {
-  id                  String            @id @default(uuid()) @db.Uuid
+  id                  String                @id @default(uuid()) @db.Uuid
   name                String
-  email               String            @unique
+  email               String                @unique
   password            String
-  document            String?
-  status              Boolean           @default(true)
-  role                Int
-  jumper              Int
-  veterinaryClinicId  String?           @db.Uuid
-  veterinaryClinic    VeterinaryClinic? @relation(fields: [veterinaryClinicId], references: [id])
-  petUsers            PetUser[]
-  createdAt           DateTime          @default(now())
+  status              Boolean               @default(true)
+  createdAt           DateTime              @default(now())
+  UserProfileEmployee UserProfileEmployee[]
+  UserProfileTutor    UserProfileTutor?
 }
 
-model Address {
-  id              String                @id @default(uuid()) @db.Uuid
-  cep             String                @db.VarChar(8)
-  street          String                @db.VarChar(255)
-  number          String                @db.VarChar(10)
-  complement      String?               @db.VarChar(255)
-  neighborhood    String                @db.VarChar(100)
-  city            String                @db.VarChar(100)
-  state           Int                   @db.Integer
-  country         String                @default("Brasil") @db.VarChar(100)
-  createdAt       DateTime              @default(now())
-  updatedAt       DateTime              @updatedAt
-  veterinaryClinics VeterinaryClinic[]
-
+model UserProfileEmployee {
+  id                  String                @id @default(uuid()) @db.Uuid
+  userId              String                @db.Uuid
+  user                User                  @relation(fields: [userId], references: [id])
+  companyId           String                @db.Uuid
+  company             VeterinaryClinic      @relation(fields: [companyId], references: [id])
+  document            String?               @db.VarChar(20)
+  phone               String?               @db.VarChar(15)
+  roles               RoleEnum
+  addressId           String?               @db.Uuid
+  address             Address?              @relation(fields: [addressId], references: [id])
+  createdAt           DateTime              @default(now())
+  VeterinarianProfile VeterinarianProfile[]
 }
 
-model VeterinaryClinic {
-  id                          String    @id @default(uuid()) @db.Uuid
-  socialNumber                String    @unique @db.VarChar(14)
-  socialName                  String    @db.VarChar(255)
-  tradeName                   String?   @db.VarChar(255)
-  stateRegistration           String?   @db.VarChar(20)
-  municipalRegistration       String?   @db.VarChar(20)
-  email                       String    @db.VarChar(255)
-  phone                       String?   @db.VarChar(15)
-  cellphone                   String?   @db.VarChar(15)
-  crmv                        String?   @db.VarChar(20)
-  crmvState                   Int?      @db.Integer
-  technicalManager            String?   @db.VarChar(255)
-  managerCrmv                 String?   @db.VarChar(20)
-  openingTime                 String?   @db.VarChar(5)
-  closingTime                 String?   @db.VarChar(5)
-  emergencyService            Boolean?  @default(false)
-  observations                String?   @db.Text
-  active                      Boolean   @default(true)
-  addressId                   String?    @db.Uuid
-  address                     Address?   @relation(fields: [addressId], references: [id])
-  users                       User[]
-  clinicPlan                  ClinicPlan[]
-  createdAt                   DateTime  @default(now())
-  updatedAt                   DateTime  @updatedAt
-
+model VeterinarianProfile {
+  id               String              @id @default(uuid()) @db.Uuid
+  employeeId       String              @db.Uuid
+  employee         UserProfileEmployee @relation(fields: [employeeId], references: [id])
+  crmv             String              @db.VarChar(20)
+  crmvState        StateEnum
+  technicalManager Boolean             @default(false)
+  createdAt        DateTime            @default(now())
+  Exam             Exam[]
+  ResultExam       ResultExam[]
 }
+
+model UserProfileTutor {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id])
+  document  String?  @db.VarChar(20)
+  phone     String?  @db.VarChar(15)
+  addressId String?  @db.Uuid
+  address   Address? @relation(fields: [addressId], references: [id])
+  pets      Pet[]
+  createdAt DateTime @default(now())
+
+  @@unique([userId])
+}
+
+/////////////////////////////
+// Pets
+/////////////////////////////
 
 model Pet {
-  id              String    @id @default(uuid()) @db.Uuid
-  name            String    @db.VarChar(100)
-  species         String    @db.VarChar(50)
-  breed           Int       @db.Integer
-  gender          String    @db.VarChar(10)
+  id              String           @id @default(uuid()) @db.Uuid
+  name            String           @db.VarChar(100)
+  species         String           @db.VarChar(50)
+  breed           Int
+  gender          GenderEnum
   birthDate       DateTime?
-  color           String?   @db.VarChar(50)
+  color           String?          @db.VarChar(50)
   weight          Float?
-  microchipNumber String?   @unique @db.VarChar(15)
-  observations    String?   @db.Text
-  active          Boolean   @default(true)
-  petUsers        PetUser[]
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  microchipNumber String?          @unique @db.VarChar(15)
+  observations    String?          @db.Text
+  active          Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  tutorId         String           @db.Uuid
+  tutor           UserProfileTutor @relation(fields: [tutorId], references: [id])
+  appointments    Appointment[]
+  exams           Exam[]
+  medications     Medication[]
+  Payment         Payment[]
 }
 
-model PetUser {
-  id               String   @id @default(uuid()) @db.Uuid
-  userId           String   @db.Uuid
-  petId            String   @db.Uuid
-  user             User     @relation(fields: [userId], references: [id])
-  pet              Pet      @relation(fields: [petId], references: [id])
-  createdAt        DateTime @default(now())
+/////////////////////////////
+// Clínicas e planos
+/////////////////////////////
 
-  @@unique([userId, petId])
+model VeterinaryClinic {
+  id                    String                @id @default(uuid()) @db.Uuid
+  socialNumber          String                @unique @db.VarChar(14)
+  socialName            String                @db.VarChar(255)
+  tradeName             String?               @db.VarChar(255)
+  stateRegistration     String?               @db.VarChar(20)
+  municipalRegistration String?               @db.VarChar(20)
+  email                 String                @db.VarChar(255)
+  phone                 String?               @db.VarChar(15)
+  cellphone             String?               @db.VarChar(15)
+  crmv                  String?               @db.VarChar(20)
+  crmvState             StateEnum?
+  technicalManager      String?               @db.VarChar(255)
+  managerCrmv           String?               @db.VarChar(20)
+  openingTime           String?               @db.VarChar(5)
+  closingTime           String?               @db.VarChar(5)
+  emergencyService      Boolean?              @default(false)
+  observations          String?               @db.Text
+  active                Boolean               @default(true)
+  addressId             String?               @db.Uuid
+  address               Address?              @relation(fields: [addressId], references: [id])
+  clinicPlan            ClinicPlan[]
+  products              Product[]
+  services              Service[]
+  appointments          Appointment[]
+  employees             UserProfileEmployee[]
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  Exam                  Exam[]
+  ResultExam            ResultExam[]
+  Payment               Payment[]
 }
 
 model Plan {
-  id                 String    @id @default(uuid()) @db.Uuid
-  name               String    @db.VarChar(255)
-  description        String?   @db.Text
-  price              Float
-  billingPeriod      String     @default("MONTHLY") // criar enumerador
-  maxUsers           Int?      // número máximo de usuários que a clínica pode ter
-  active             Boolean   @default(true)
-  clinicPlan         ClinicPlan[]
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-
+  id          String       @id @default(uuid()) @db.Uuid
+  name        String       @db.VarChar(255)
+  description String?      @db.Text
+  price       Float
+  active      Boolean      @default(true)
+  clinicPlan  ClinicPlan[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model ClinicPlan {
-  id                 String                 @id @default(uuid()) @db.Uuid
-  active             Boolean                @default(true)
-  veterinaryClinicId String                 @db.Uuid
-  veterinaryClinic   VeterinaryClinic       @relation(fields: [veterinaryClinicId], references: [id])
-  planId             String                 @db.Uuid
-  plan               Plan                   @relation(fields: [planId], references: [id])
-  createdAt          DateTime               @default(now())
-  updatedAt          DateTime               @updatedAt
-  @@unique([veterinaryClinicId, planId])
+  id                 String           @id @default(uuid()) @db.Uuid
+  active             Boolean          @default(true)
+  billingPeriod      Int              @default(3)
+  maxUsers           Int?
+  veterinaryClinicId String           @db.Uuid
+  veterinaryClinic   VeterinaryClinic @relation(fields: [veterinaryClinicId], references: [id])
+  planId             String           @db.Uuid
+  plan               Plan             @relation(fields: [planId], references: [id])
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
 
+  @@unique([veterinaryClinicId, planId])
+}
+
+/////////////////////////////
+// Produtos, Serviços e Pagamentos
+/////////////////////////////
+
+model Product {
+  id           String           @id @default(uuid()) @db.Uuid
+  name         String           @db.VarChar(255)
+  quantity     Int
+  validatedAt  DateTime?
+  price        Float
+  type         ProductType
+  clinicId     String           @db.Uuid
+  clinic       VeterinaryClinic @relation(fields: [clinicId], references: [id])
+  createdAt    DateTime         @default(now())
+  PaymentItem  PaymentItem[]
+  ProductUsage ProductUsage[]
+}
+
+model ProductUsage {
+  id        String   @id @default(uuid()) @db.Uuid
+  productId String   @db.Uuid
+  product   Product  @relation(fields: [productId], references: [id])
+  usage     Usage
+  createdAt DateTime @default(now())
+}
+
+model Service {
+  id          String           @id @default(uuid()) @db.Uuid
+  name        String           @db.VarChar(255)
+  price       Float
+  clinicId    String           @db.Uuid
+  clinic      VeterinaryClinic @relation(fields: [clinicId], references: [id])
+  Appointment Appointment[]
+  PaymentItem PaymentItem[]
+}
+
+model Payment {
+  id        String           @id @default(uuid()) @db.Uuid
+  petId     String           @db.Uuid
+  pet       Pet              @relation(fields: [petId], references: [id])
+  clinicId  String           @db.Uuid
+  clinic    VeterinaryClinic @relation(fields: [clinicId], references: [id])
+  amount    Float
+  status    PaymentStatus
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  items     PaymentItem[]
+}
+
+model PaymentItem {
+  id        String   @id @default(uuid()) @db.Uuid
+  paymentId String   @db.Uuid
+  payment   Payment  @relation(fields: [paymentId], references: [id])
+  serviceId String?  @db.Uuid
+  service   Service? @relation(fields: [serviceId], references: [id])
+  productId String?  @db.Uuid
+  product   Product? @relation(fields: [productId], references: [id])
+  price     Float
+  createdAt DateTime @default(now())
+}
+
+/////////////////////////////
+// Endereço
+/////////////////////////////
+
+model Address {
+  id                  String                @id @default(uuid()) @db.Uuid
+  cep                 String                @db.VarChar(8)
+  street              String                @db.VarChar(255)
+  number              String                @db.VarChar(10)
+  complement          String?               @db.VarChar(255)
+  neighborhood        String                @db.VarChar(100)
+  city                String                @db.VarChar(100)
+  state               StateEnum
+  country             String                @default("Brasil") @db.VarChar(100)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  veterinaryClinics   VeterinaryClinic[]
+  UserProfileTutor    UserProfileTutor[]
+  UserProfileEmployee UserProfileEmployee[]
+}
+
+/////////////////////////////
+// Appointments, Exams e Medications
+/////////////////////////////
+
+model Appointment {
+  id          String                @id @default(uuid()) @db.Uuid
+  petId       String                @db.Uuid
+  pet         Pet                   @relation(fields: [petId], references: [id])
+  clinicId    String                @db.Uuid
+  clinic      VeterinaryClinic      @relation(fields: [clinicId], references: [id])
+  serviceId   String?               @db.Uuid
+  service     Service?              @relation(fields: [serviceId], references: [id])
+  status      AppointmentStatusEnum @default(PENDING)
+  scheduledAt DateTime              @default(now())
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+}
+
+model Exam {
+  id               String               @id @default(uuid()) @db.Uuid
+  petId            String               @db.Uuid
+  pet              Pet                  @relation(fields: [petId], references: [id])
+  requestedByVetId String?              @db.Uuid
+  requestedBy      VeterinarianProfile? @relation(fields: [requestedByVetId], references: [id])
+  name             String               @db.VarChar(255)
+  examDate         DateTime
+  clinicId         String?              @db.Uuid
+  clinic           VeterinaryClinic?    @relation(fields: [clinicId], references: [id])
+  comments         String?              @db.Text
+  createdAt        DateTime             @default(now())
+  ResultExam       ResultExam[]
+}
+
+model ResultExam {
+  id            String               @id @default(uuid()) @db.Uuid
+  examId        String               @db.Uuid
+  exam          Exam                 @relation(fields: [examId], references: [id])
+  IssuedByVetId String?              @db.Uuid
+  IssuedBy      VeterinarianProfile? @relation(fields: [IssuedByVetId], references: [id])
+  clinicId      String?              @db.Uuid
+  clinic        VeterinaryClinic?    @relation(fields: [clinicId], references: [id])
+  fileUrl       String               @db.VarChar(255)
+  comments      String?              @db.Text
+  createdAt     DateTime             @default(now())
+}
+
+model Medication {
+  id         String    @id @default(uuid()) @db.Uuid
+  petId      String    @db.Uuid
+  pet        Pet       @relation(fields: [petId], references: [id])
+  name       String    @db.VarChar(255)
+  dosage     String?   @db.VarChar(100)
+  startDate  DateTime
+  endDate    DateTime?
+  lastDosege DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+/////////////////////////////
+// ENUMS
+/////////////////////////////
+
+enum RoleEnum {
+  ADMIN
+  CLINIC_ADMIN
+  CLINIC_VET
+  CLINIC_STAFF
+  CLINIC_RECEPTIONIST
+}
+
+enum GenderEnum {
+  MALE
+  FEMALE
+}
+
+enum AppointmentStatusEnum {
+  PENDING
+  CONFIRMED
+  INPROCESS
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum StateEnum {
+  AC
+  AL
+  AP
+  AM
+  BA
+  CE
+  DF
+  ES
+  GO
+  MA
+  MT
+  MS
+  MG
+  PA
+  PB
+  PR
+  PE
+  PI
+  RJ
+  RN
+  RS
+  RO
+  RR
+  SC
+  SP
+  SE
+  TO
+}
+
+enum ProductType {
+  MEDICINE
+  TOY
+  FOOD
+  HYGIENE
+  ACCESSORY
+}
+
+enum Usage {
+  CLINIC
+  PETSHOP
+  SELL
 }

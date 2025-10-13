@@ -1,6 +1,6 @@
 import { IsString, IsEmail, IsNotEmpty, IsOptional, IsInt, MinLength, Length, MaxLength } from 'class-validator';
 
-export class CreateNewTutorDTO {
+export class CreateTutorDTO {
   @IsString()
   @IsNotEmpty({ message: 'O nome é obrigatório.' })
   name: string;
