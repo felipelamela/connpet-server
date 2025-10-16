@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login.auth.dto';
-import { ErrorResponse } from 'src/response/errorResponse';
+import { ErrorResponse } from 'src/commom/response/errorResponse';
 import { ErrorEnum } from 'src/commom/enum/error.enum';
 import { AuthUserPresenter } from './auth-user.presenter';
 import { Public } from '../commom/decorators/public.decorator';
@@ -17,7 +17,7 @@ export class AuthController {
       const login = await this.authService.login(loginAuthDto);
       return new AuthUserPresenter(login)
     } catch (error) {
-      return new ErrorResponse(error.message, 404, ErrorEnum.USER_CREATE_ERROR)
+      return new ErrorResponse(error)
     }
 
   }

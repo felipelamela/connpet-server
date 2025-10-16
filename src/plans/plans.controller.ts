@@ -1,34 +1,66 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { PlansService } from './plans.service';
 import { CreatePlanDto } from './dto/create-plan.dto';
 import { UpdatePlanDto } from './dto/update-plan.dto';
+import { ErrorResponse } from '../commom/response/errorResponse';
+import { ErrorEnum } from '../commom/enum/error.enum';
 
 @Controller('plans')
 export class PlansController {
-  constructor(private readonly plansService: PlansService) {}
+  constructor(private readonly plansService: PlansService) { }
 
   @Post()
-  create(@Body() createPlanDto: CreatePlanDto) {
-    return this.plansService.create(createPlanDto);
+  async create(@Body() createPlanDto: CreatePlanDto) {
+    try {
+      return await this.plansService.create(createPlanDto);
+    } catch (error) {
+      return new ErrorResponse({
+        message: error.message, statusCode: 404, errorsCode: ErrorEnum.CREATE_ERROR
+      })
+    }
   }
 
   @Get()
-  findAll() {
-    return this.plansService.findAll();
+  async findAll() {
+    try {
+      return await this.plansService.findAll();
+    } catch (error) {
+      return new ErrorResponse({
+        message: error.message, statusCode: 404, errorsCode: ErrorEnum.CREATE_ERROR
+      })
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.plansService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    try {
+      return await this.plansService.findOne(id);
+    } catch (error) {
+      return new ErrorResponse({
+        message: error.message, statusCode: 404, errorsCode: ErrorEnum.CREATE_ERROR
+      })
+    }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePlanDto: UpdatePlanDto) {
-    return this.plansService.update(+id, updatePlanDto);
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() updatePlanDto: UpdatePlanDto) {
+    try {
+      return await this.plansService.update(id, updatePlanDto);
+    } catch (error) {
+      return new ErrorResponse({
+        message: error.message, statusCode: 404, errorsCode: ErrorEnum.CREATE_ERROR
+      })
+    }
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.plansService.remove(+id);
+  @Put('change-status/:id')
+  async remove(@Param('id') id: string) {
+    try {
+      return await this.plansService.changeStatus(id, false);
+    } catch (error) {
+      return new ErrorResponse({
+        message: error.message, statusCode: 404, errorsCode: ErrorEnum.CREATE_ERROR
+      })
+    }
   }
 }

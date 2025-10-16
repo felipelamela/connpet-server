@@ -8,9 +8,13 @@ export class AuthUserPresenter {
   role: number | null;
   veterinaryClinicId?: string | null
   petUsers: []
-  constructor(user: User) {
+  userProfileEmployee: []
+  userProfileTutor: []
+  constructor(user: any) {
     this.id = user.id;
     this.name = user.name;
     this.email = user.email;
+    this.userProfileEmployee = user.UserProfileEmployee
+    this.userProfileTutor = user.UserProfileTutor
   }
 }
