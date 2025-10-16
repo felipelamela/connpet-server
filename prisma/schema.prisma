@@ -43,6 +43,7 @@ model VeterinarianProfile {
   Exam             Exam[]
   ResultExam       ResultExam[]
   employee         UserProfileEmployee @relation(fields: [employeeId], references: [id])
+  Internation      Internation[]
 }
 
 model UserProfileTutor {
@@ -58,54 +59,58 @@ model UserProfileTutor {
 }
 
 model Pet {
-  id              String           @id @default(uuid()) @db.Uuid
-  name            String           @db.VarChar(100)
-  species         String           @db.VarChar(50)
-  breed           Int
-  birthDate       DateTime?
-  color           String?          @db.VarChar(50)
-  weight          Float?
-  microchipNumber String?          @unique @db.VarChar(15)
-  observations    String?
-  active          Boolean          @default(true)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  tutorId         String           @db.Uuid
-  gender          GenderEnum
-  appointments    Appointment[]
-  exams           Exam[]
-  medications     Medication[]
-  Payment         Payment[]
-  tutor           UserProfileTutor @relation(fields: [tutorId], references: [id])
+  id                 String               @id @default(uuid()) @db.Uuid
+  name               String               @db.VarChar(100)
+  species            String               @db.VarChar(50)
+  breed              Int
+  birthDate          DateTime?
+  color              String?              @db.VarChar(50)
+  weight             Float?
+  microchipNumber    String?              @unique @db.VarChar(15)
+  observations       String?
+  active             Boolean              @default(true)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  tutorId            String               @db.Uuid
+  gender             GenderEnum
+  appointments       Appointment[]
+  exams              Exam[]
+  medications        Medication[]
+  Payment            Payment[]
+  tutor              UserProfileTutor     @relation(fields: [tutorId], references: [id])
+  Internation        Internation[]
+  InternationService InternationService[]
+  InternationProduct InternationProduct[]
 }
 
 model VeterinaryClinic {
-  id                    String                @id @default(uuid()) @db.Uuid
-  cnpj                  String                @unique @db.VarChar(14)
-  socialName            String                @db.VarChar(255)
-  tradeName             String?               @db.VarChar(255)
-  email                 String                @db.VarChar(255)
-  phone                 String?               @db.VarChar(15)
-  cellphone             String?               @db.VarChar(15)
-  technicalManager      String?               @db.VarChar(255)
-  managerCrmv           String?               @db.VarChar(20)
-  openingTime           String?               @db.VarChar(5)
-  closingTime           String?               @db.VarChar(5)
-  emergencyService      Boolean?              @default(false)
-  observations          String?
-  active                Boolean               @default(true)
-  addressId             String?               @db.Uuid
-  createdAt             DateTime              @default(now())
-  updatedAt             DateTime              @updatedAt
-  appointments          Appointment[]
-  clinicPlan            ClinicPlan[]
-  Exam                  Exam[]
-  Payment               Payment[]
-  products              Product[]
-  ResultExam            ResultExam[]
-  services              Service[]
-  employees             UserProfileEmployee[]
-  address               Address?              @relation(fields: [addressId], references: [id])
+  id               String                @id @default(uuid()) @db.Uuid
+  cnpj             String                @unique @db.VarChar(14)
+  socialName       String                @db.VarChar(255)
+  tradeName        String?               @db.VarChar(255)
+  email            String                @db.VarChar(255)
+  phone            String?               @db.VarChar(15)
+  cellphone        String?               @db.VarChar(15)
+  technicalManager String?               @db.VarChar(255)
+  managerCrmv      String?               @db.VarChar(20)
+  openingTime      String?               @db.VarChar(5)
+  closingTime      String?               @db.VarChar(5)
+  emergencyService Boolean?              @default(false)
+  observations     String?
+  active           Boolean               @default(true)
+  addressId        String?               @db.Uuid
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  appointments     Appointment[]
+  clinicPlan       ClinicPlan[]
+  Exam             Exam[]
+  Payment          Payment[]
+  products         Product[]
+  ResultExam       ResultExam[]
+  services         Service[]
+  employees        UserProfileEmployee[]
+  address          Address?              @relation(fields: [addressId], references: [id])
+  Internation      Internation[]
 }
 
 model Plan {
@@ -135,17 +140,18 @@ model ClinicPlan {
 }
 
 model Product {
-  id           String           @id @default(uuid()) @db.Uuid
-  name         String           @db.VarChar(255)
-  quantity     Int
-  validatedAt  DateTime?
-  price        Float
-  type         ProductType
-  clinicId     String           @db.Uuid
-  createdAt    DateTime         @default(now())
-  PaymentItem  PaymentItem[]
-  clinic       VeterinaryClinic @relation(fields: [clinicId], references: [id])
-  ProductUsage ProductUsage[]
+  id                 String               @id @default(uuid()) @db.Uuid
+  name               String               @db.VarChar(255)
+  quantity           Int
+  validatedAt        DateTime?
+  price              Float
+  type               ProductType
+  clinicId           String               @db.Uuid
+  createdAt          DateTime             @default(now())
+  PaymentItem        PaymentItem[]
+  clinic             VeterinaryClinic     @relation(fields: [clinicId], references: [id])
+  ProductUsage       ProductUsage[]
+  InternationProduct InternationProduct[]
 }
 
 model ProductUsage {
@@ -157,13 +163,14 @@ model ProductUsage {
 }
 
 model Service {
-  id          String           @id @default(uuid()) @db.Uuid
-  name        String           @db.VarChar(255)
-  price       Float
-  clinicId    String           @db.Uuid
-  Appointment Appointment[]
-  PaymentItem PaymentItem[]
-  clinic      VeterinaryClinic @relation(fields: [clinicId], references: [id])
+  id                 String               @id @default(uuid()) @db.Uuid
+  name               String               @db.VarChar(255)
+  price              Float
+  clinicId           String               @db.Uuid
+  Appointment        Appointment[]
+  PaymentItem        PaymentItem[]
+  clinic             VeterinaryClinic     @relation(fields: [clinicId], references: [id])
+  InternationService InternationService[]
 }
 
 model Payment {
@@ -261,6 +268,48 @@ model Medication {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   pet        Pet       @relation(fields: [petId], references: [id])
+}
+
+model Internation {
+  id        String @id @default(uuid()) @db.Uuid
+  petId     String @db.Uuid
+  companyId String @db.Uuid
+  vetId     String @db.Uuid
+
+  startDate DateTime
+  endDate   DateTime?
+
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  pet                 Pet                  @relation(fields: [petId], references: [id])
+  veterinaryClinic    VeterinaryClinic     @relation(fields: [companyId], references: [id])
+  veterinarianProfile VeterinarianProfile  @relation(fields: [vetId], references: [id])
+  InternationService  InternationService[]
+  InternationProduct  InternationProduct[]
+}
+
+model InternationService {
+  id            String      @id @default(uuid()) @db.Uuid
+  internationId String      @db.Uuid
+  petId         String      @db.Uuid
+  serviceId     String      @db.Uuid
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  service       Service     @relation(fields: [serviceId], references: [id])
+  internation   Internation @relation(fields: [internationId], references: [id])
+  pet           Pet         @relation(fields: [petId], references: [id])
+}
+
+model InternationProduct {
+  id            String      @id @default(uuid()) @db.Uuid
+  internationId String      @db.Uuid
+  petId         String      @db.Uuid
+  productId     String      @db.Uuid
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  product       Product     @relation(fields: [productId], references: [id])
+  internation   Internation @relation(fields: [internationId], references: [id])
+  pet           Pet         @relation(fields: [petId], references: [id])
 }
 
 enum RoleEnum {

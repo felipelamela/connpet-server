@@ -15,7 +15,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './commom/guardians/jwt-auth.guardian';
 import { ExamModule } from './exam/exam.module';
-import { ResultExamModule } from './exam/module/result-exam/result-exam.module';
+import { InternationModule } from './internation/internation.module';
 
 @Module({
   imports: [
@@ -38,7 +38,7 @@ import { ResultExamModule } from './exam/module/result-exam/result-exam.module';
     AppointmentModule,
     ClinicVetUserModule,
     ExamModule,
-    ResultExamModule],
+    InternationModule,],
   controllers: [AppController],
   providers: [
     AppService,
