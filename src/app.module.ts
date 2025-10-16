@@ -14,6 +14,8 @@ import { ClinicVetUserModule } from './clinic-vet/modules/clinic-vet-user/clinic
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './commom/guardians/jwt-auth.guardian';
+import { ExamModule } from './exam/exam.module';
+import { ResultExamModule } from './exam/module/result-exam/result-exam.module';
 
 @Module({
   imports: [
@@ -34,7 +36,9 @@ import { JwtAuthGuard } from './commom/guardians/jwt-auth.guardian';
     PaymentsModule,
     TutorModule,
     AppointmentModule,
-    ClinicVetUserModule],
+    ClinicVetUserModule,
+    ExamModule,
+    ResultExamModule],
   controllers: [AppController],
   providers: [
     AppService,
