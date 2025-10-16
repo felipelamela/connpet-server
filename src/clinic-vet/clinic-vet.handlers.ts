@@ -71,14 +71,16 @@ export class ClinicVetHandlers {
     }
     return 0
   }
-  async validateUserProfile(data: { userId: string, companyId: string }) {
+  async createUserProfile(data: { user: UserEntity, companyId: string }) {
     try {
-      return await this.clinicRepository.findUserProfile({
-        userId: data.userId,
-        clinicId: data.companyId,
-      })
+      const user = await this.userService.create(data.user)
+      return await this.createProfile({ userId: user.id, companyId: data.companyId })
+
     } catch (error) {
       throw new ErrorResponse(error)
     }
+  }
+  async createTutorWithPet(){
+    
   }
 }

@@ -23,5 +23,5 @@ export class CreateUserProfileDto {
 
   @IsUUID()
   @IsNotEmpty({ message: 'ID é obrigatorio' })
-  clinicId?: string;
+  clinicId: string;
 }

@@ -6,6 +6,7 @@ import { ClinicVetEntity } from './entities/clinic-vet.entity';
 import { ErrorResponse } from '../commom/response/errorResponse';
 import { User, VeterinaryClinic } from '@prisma/client';
 import { CreateUserProfileDto } from './dto/create-user-profile.dto';
+import { generateRandomPassword } from '../commom/system/generateRandomPassword';
 
 @Injectable()
 export class ClinicVetService {
@@ -26,7 +27,13 @@ export class ClinicVetService {
   }
   async createUserProfile(createUserProfileDto: CreateUserProfileDto) {
     try {
-      await this.clinicVetHandlers.validateUserProfile({})
+      const password = generateRandomPassword()
+      const userEntity = new UserEntity({
+        ...createUserProfileDto,
+        password,
+        status: true,
+      })
+      await this.clinicVetHandlers.createUserProfile({ user: userEntity, companyId: createUserProfileDto.clinicId })
     } catch (error) {
       throw new ErrorResponse(error)
     }

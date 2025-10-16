@@ -1,26 +1,61 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
+import { ErrorResponse } from '../commom/response/errorResponse';
 
 @Injectable()
 export class AppointmentService {
-  create(createAppointmentDto: CreateAppointmentDto) {
-    return 'This action adds a new appointment';
+  async create(createAppointmentDto: CreateAppointmentDto) {
+    try {
+      return ""
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 
-  findAll() {
-    return `This action returns all appointment`;
+  async findAll() {
+    try {
+      return ""
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} appointment`;
+  async findOne(id: number) {
+    try {
+      return ""
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 
-  update(id: number, updateAppointmentDto: UpdateAppointmentDto) {
-    return `This action updates a #${id} appointment`;
+  async update(id: number, updateAppointmentDto: UpdateAppointmentDto) {
+    try {
+      return ""
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} appointment`;
-  }
+
 }

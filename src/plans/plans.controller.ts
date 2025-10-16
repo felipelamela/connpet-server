@@ -14,9 +14,7 @@ export class PlansController {
     try {
       return await this.plansService.create(createPlanDto);
     } catch (error) {
-      return new ErrorResponse({
-        message: error.message, statusCode: 404, errorsCode: ErrorEnum.CREATE_ERROR
-      })
+      return new ErrorResponse(error)
     }
   }
 
@@ -25,9 +23,7 @@ export class PlansController {
     try {
       return await this.plansService.findAll();
     } catch (error) {
-      return new ErrorResponse({
-        message: error.message, statusCode: 404, errorsCode: ErrorEnum.CREATE_ERROR
-      })
+      return new ErrorResponse(error)
     }
   }
 
@@ -36,9 +32,7 @@ export class PlansController {
     try {
       return await this.plansService.findOne(id);
     } catch (error) {
-      return new ErrorResponse({
-        message: error.message, statusCode: 404, errorsCode: ErrorEnum.CREATE_ERROR
-      })
+      return new ErrorResponse(error)
     }
   }
 
@@ -47,9 +41,7 @@ export class PlansController {
     try {
       return await this.plansService.update(id, updatePlanDto);
     } catch (error) {
-      return new ErrorResponse({
-        message: error.message, statusCode: 404, errorsCode: ErrorEnum.CREATE_ERROR
-      })
+      return new ErrorResponse(error)
     }
   }
 
@@ -58,9 +50,7 @@ export class PlansController {
     try {
       return await this.plansService.changeStatus(id, false);
     } catch (error) {
-      return new ErrorResponse({
-        message: error.message, statusCode: 404, errorsCode: ErrorEnum.CREATE_ERROR
-      })
+      return new ErrorResponse(error)
     }
   }
 }

@@ -2,33 +2,60 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ErrorResponse } from '../../../commom/response/errorResponse';
 
 @Controller('product')
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productService: ProductService) { }
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  async create(@Body() createProductDto: CreateProductDto) {
+    try {
+      return await this.productService.create(createProductDto);
+
+    } catch (error) {
+      throw new ErrorResponse(error)
+    }
+
   }
 
   @Get()
-  findAll() {
-    return this.productService.findAll();
+  async findAll() {
+    try {
+      return await this.productService.findAll();
+
+    } catch (error) {
+      throw new ErrorResponse(error)
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    try {
+      return await this.productService.findOne(+id);
+
+    } catch (error) {
+      throw new ErrorResponse(error)
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
+  async update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+    try {
+      return await this.productService.update(+id, updateProductDto);
+
+    } catch (error) {
+      throw new ErrorResponse(error)
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productService.remove(+id);
+  async remove(@Param('id') id: string) {
+    try {
+      return await this.productService.remove(+id);
+
+    } catch (error) {
+      throw new ErrorResponse(error)
+    }
   }
 }

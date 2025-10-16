@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../commom/prisma/prisma.service";
+import { ErrorResponse } from "../commom/response/errorResponse";
 
 interface ITutor {
   userId: string,
@@ -18,8 +19,30 @@ export default class TutorRepository {
         data: data
       })
     } catch (error) {
-      throw new Error("Erro ao cadastrar Tutor")
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar Tutor",
+        errorsCode: error.code,
+        details: error.meta,
+        statusCode: 400
+      })
     }
 
+  }
+  async findTutor(id: string) {
+    try {
+      return await this.prisma.userProfileTutor.findFirst({
+        where: { id: id },
+        include: {
+          pets: true
+        }
+      })
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao buscar tutor",
+        errorsCode: error.code,
+        details: error.meta,
+        statusCode: 400
+      })
+    }
   }
 }

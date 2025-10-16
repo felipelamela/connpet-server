@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../commom/prisma/prisma.service";
 import { CreatePlanDto } from "./dto/create-plan.dto";
 import { UpdatePlanDto } from "./dto/update-plan.dto";
+import { ErrorResponse } from "../commom/response/errorResponse";
 
 @Injectable()
 export class PlansRepository {
@@ -10,7 +11,12 @@ export class PlansRepository {
     try {
       return this.prisma.plan.create({ data: plan })
     } catch (error) {
-      throw new Error("Erro ao cadastrar plano.")
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
     }
   }
   async getPlans() {

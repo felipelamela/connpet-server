@@ -1,26 +1,74 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { PrismaService } from '../../../commom/prisma/prisma.service';
+import { ErrorResponse } from '../../../commom/response/errorResponse';
 
 @Injectable()
 export class ProductService {
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
+  constructor(private readonly prisma: PrismaService) { }
+  async create(createProductDto: CreateProductDto) {
+    try {
+      return await this.prisma.product.create({ data: createProductDto })
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 
-  findAll() {
-    return `This action returns all product`;
+  async findAll() {
+    try {
+      return ""
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: number) {
+    try {
+      return ""
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: number, updateProductDto: UpdateProductDto) {
+    try {
+      return ""
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: number) {
+    try {
+      return ""
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 }

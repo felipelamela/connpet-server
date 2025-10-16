@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { RandomJumper } from '../commom/system/randomJumper';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../commom/prisma/prisma.service';
-import { generateRandomPassword } from '../commom/system/generateRandomPassword';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { ErrorResponse } from '../commom/response/errorResponse';
 
@@ -23,7 +22,12 @@ export class UserService {
       });
       return user;
     } catch (error) {
-      throw Error("Erro ao criar usuário");
+      throw new ErrorResponse({
+        message: "Erro ao criar usuário",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      });
     }
   }
   async findUserByEmail(email: string) {

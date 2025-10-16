@@ -3,6 +3,7 @@ import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
 import { PrismaService } from 'src/commom/prisma/prisma.service';
 import { EstadoEnum } from '../commom/enum/estado.enum';
+import { ErrorResponse } from '../commom/response/errorResponse';
 
 @Injectable()
 export class AddressService {
@@ -17,18 +18,13 @@ export class AddressService {
           state
         }
       })
-    } catch {
-      throw new Error("Erro ao cadastrar endereço")
-    }
-  }
-
-  async findOne(id: string) {
-    try {
-      return await this.prisma.address.findFirst({
-        where: { id: id }
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar endereço",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
       })
-    } catch {
-      throw new Error("Erro ao buscar endereço")
     }
   }
   async update(id: string, updateAddressDto: UpdateAddressDto) {
@@ -42,19 +38,6 @@ export class AddressService {
       // })
     } catch {
       throw new Error("Erro ao atualizar endereço")
-    }
-  }
-
-  async remove(id: string) {
-    try {
-      return await this.prisma.address.delete({
-        where: {
-          id: id
-        }
-      }
-      )
-    } catch {
-      throw new Error("Erro ao deletar endereço")
     }
   }
 }

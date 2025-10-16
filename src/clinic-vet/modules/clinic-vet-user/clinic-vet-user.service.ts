@@ -6,6 +6,7 @@ import { UserEntity } from '../../../user/entities/user.entity';
 import { UserProfileEmployeeEntity } from './entities/user-profile-employee.entity';
 import { RoleEnum } from '@prisma/client';
 import { UserService } from '../../../user/user.service';
+import { ErrorResponse } from '../../../commom/response/errorResponse';
 
 @Injectable()
 export class ClinicVetUserService {
@@ -32,18 +33,54 @@ export class ClinicVetUserService {
   }
 
   findAll() {
-    return `This action returns all clinicVetUser`;
+    try {
+      return ""
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} clinicVetUser`;
+    try {
+      return ""
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 
   update(id: number, updateClinicVetUserDto: UpdateClinicVetUserDto) {
-    return `This action updates a #${id} clinicVetUser`;
+    try {
+      return ""
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 
   remove(id: number) {
-    return `This action removes a #${id} clinicVetUser`;
+    try {
+      return ""
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 }

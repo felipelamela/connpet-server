@@ -1,26 +1,72 @@
 import { Injectable } from '@nestjs/common';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
+import { ErrorResponse } from '../../../commom/response/errorResponse';
 
 @Injectable()
 export class ServiceService {
-  create(createServiceDto: CreateServiceDto) {
-    return 'This action adds a new service';
+  async create(createServiceDto: CreateServiceDto) {
+    try {
+      return ""
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 
-  findAll() {
-    return `This action returns all service`;
+  async findAll() {
+    try {
+      return ""
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} service`;
+  async findOne(id: number) {
+    try {
+      return ""
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 
-  update(id: number, updateServiceDto: UpdateServiceDto) {
-    return `This action updates a #${id} service`;
+  async update(id: number, updateServiceDto: UpdateServiceDto) {
+    try {
+      return ""
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} service`;
+  async remove(id: number) {
+    try {
+      return ""
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao cadastrar plano.",
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code
+      })
+    }
   }
 }
