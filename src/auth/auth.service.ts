@@ -34,7 +34,7 @@ export class AuthService {
       })
       return findUser
     } catch (error) {
-      throw new Error(error.message)
+      throw new ErrorResponse(error)
     }
   }
 

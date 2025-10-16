@@ -10,6 +10,7 @@ export class AppController {
   getHello(): Object {
     return this.appService.getHello();
   }
+  
   @Get('metrics')
   getMetrics() {
     return client.register.metrics();

@@ -71,4 +71,14 @@ export class ClinicVetHandlers {
     }
     return 0
   }
+  async validateUserProfile(data: { userId: string, companyId: string }) {
+    try {
+      return await this.clinicRepository.findUserProfile({
+        userId: data.userId,
+        clinicId: data.companyId,
+      })
+    } catch (error) {
+      throw new ErrorResponse(error)
+    }
+  }
 }

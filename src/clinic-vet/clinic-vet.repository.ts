@@ -64,4 +64,25 @@ export class clinicVetRepository {
       })
     }
   }
+
+  async findUserProfile(data: { userId: string, clinicId: string }) {
+    try {
+      return await this.prisma.userProfileEmployee.findFirst({
+        where: {
+          userId: data.userId,
+          companyId: data.clinicId
+        },
+        select: {
+          id: true
+        }
+      })
+    } catch (error) {
+      throw new ErrorResponse({
+        message: "Erro ao buscar perfil",
+        statusCode: 400,
+        errorsCode: error.code,
+        details: error.meta
+      })
+    }
+  }
 }

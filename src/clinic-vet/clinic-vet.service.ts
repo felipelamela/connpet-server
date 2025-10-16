@@ -5,6 +5,7 @@ import { UserEntity } from '../user/entities/user.entity';
 import { ClinicVetEntity } from './entities/clinic-vet.entity';
 import { ErrorResponse } from '../commom/response/errorResponse';
 import { User, VeterinaryClinic } from '@prisma/client';
+import { CreateUserProfileDto } from './dto/create-user-profile.dto';
 
 @Injectable()
 export class ClinicVetService {
@@ -22,5 +23,12 @@ export class ClinicVetService {
     } catch (error) {
       throw new ErrorResponse(error)
     };
+  }
+  async createUserProfile(createUserProfileDto: CreateUserProfileDto) {
+    try {
+      await this.clinicVetHandlers.validateUserProfile({})
+    } catch (error) {
+      throw new ErrorResponse(error)
+    }
   }
 }

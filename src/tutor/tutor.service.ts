@@ -19,6 +19,8 @@ export class TutorService {
 
   async create(createTutorDto: CreateTutorDTO) {
     try {
+      //adicionar validação de cadastro de tutor
+
       const passwordTutor = generateRandomPassword()
 
       const addressEntity = new AddressEntity(createTutorDto)
