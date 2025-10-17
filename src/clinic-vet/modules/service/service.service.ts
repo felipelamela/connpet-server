@@ -7,66 +7,66 @@ import { ErrorResponse } from '../../../commom/response/errorResponse';
 export class ServiceService {
   async create(createServiceDto: CreateServiceDto) {
     try {
-      return ""
+      return '';
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
 
   async findAll() {
     try {
-      return ""
+      return '';
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
 
   async findOne(id: number) {
     try {
-      return ""
+      return '';
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
 
   async update(id: number, updateServiceDto: UpdateServiceDto) {
     try {
-      return ""
+      return '';
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
 
   async remove(id: number) {
     try {
-      return ""
+      return '';
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
 }

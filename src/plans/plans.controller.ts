@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Put,
+} from '@nestjs/common';
 import { PlansService } from './plans.service';
 import { CreatePlanDto } from './dto/create-plan.dto';
 import { UpdatePlanDto } from './dto/update-plan.dto';
@@ -7,14 +16,14 @@ import { ErrorEnum } from '../commom/enum/error.enum';
 
 @Controller('plans')
 export class PlansController {
-  constructor(private readonly plansService: PlansService) { }
+  constructor(private readonly plansService: PlansService) {}
 
   @Post()
   async create(@Body() createPlanDto: CreatePlanDto) {
     try {
       return await this.plansService.create(createPlanDto);
     } catch (error) {
-      return new ErrorResponse(error)
+      return new ErrorResponse(error);
     }
   }
 
@@ -23,7 +32,7 @@ export class PlansController {
     try {
       return await this.plansService.findAll();
     } catch (error) {
-      return new ErrorResponse(error)
+      return new ErrorResponse(error);
     }
   }
 
@@ -32,7 +41,7 @@ export class PlansController {
     try {
       return await this.plansService.findOne(id);
     } catch (error) {
-      return new ErrorResponse(error)
+      return new ErrorResponse(error);
     }
   }
 
@@ -41,7 +50,7 @@ export class PlansController {
     try {
       return await this.plansService.update(id, updatePlanDto);
     } catch (error) {
-      return new ErrorResponse(error)
+      return new ErrorResponse(error);
     }
   }
 
@@ -50,7 +59,7 @@ export class PlansController {
     try {
       return await this.plansService.changeStatus(id, false);
     } catch (error) {
-      return new ErrorResponse(error)
+      return new ErrorResponse(error);
     }
   }
 }

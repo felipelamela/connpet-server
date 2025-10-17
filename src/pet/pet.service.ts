@@ -7,14 +7,13 @@ import { PetEntity } from './entities/pet.entity';
 
 @Injectable()
 export class PetService {
-  constructor(private readonly petHandler: PetHandler) { }
+  constructor(private readonly petHandler: PetHandler) {}
   async create(createPetDto: CreatePetDto) {
     try {
-      const petModel = new PetEntity(createPetDto)
-      return await this.petHandler.createPetHandler(petModel)
+      const petModel = new PetEntity(createPetDto);
+      return await this.petHandler.createPetHandler(petModel);
     } catch (error) {
-      throw new ErrorResponse(error)
+      throw new ErrorResponse(error);
     }
   }
-
 }

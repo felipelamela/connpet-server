@@ -1,4 +1,4 @@
-import { ProductType } from "@prisma/client";
+import { ProductType } from '@prisma/client';
 
 export interface IProduct {
   id?: string;

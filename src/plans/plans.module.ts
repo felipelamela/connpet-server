@@ -7,4 +7,4 @@ import { PlansRepository } from './plans.repository';
   controllers: [PlansController],
   providers: [PlansService, PlansRepository],
 })
-export class PlansModule { }
+export class PlansModule {}

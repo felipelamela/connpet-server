@@ -22,7 +22,7 @@ export default class AddressEntity {
     this.cep = address.cep;
     this.street = address.street;
     this.number = address.number;
-    this.complement = address.complement ? address.complement : "";
+    this.complement = address.complement ? address.complement : '';
     this.neighborhood = address.neighborhood;
     this.city = address.city;
     this.state = address.state;

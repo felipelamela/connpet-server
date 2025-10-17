@@ -1,13 +1,13 @@
 export const EstadoEnum = {
-  1: 'AC',  // Acre
-  2: 'AL',  // Alagoas
-  3: 'AP',  // Amapá
-  4: 'AM',  // Amazonas
-  5: 'BA',  // Bahia
-  6: 'CE',  // Ceará
-  7: 'DF',  // Distrito Federal
-  8: 'ES',  // Espírito Santo
-  9: 'GO',  // Goiás
+  1: 'AC', // Acre
+  2: 'AL', // Alagoas
+  3: 'AP', // Amapá
+  4: 'AM', // Amazonas
+  5: 'BA', // Bahia
+  6: 'CE', // Ceará
+  7: 'DF', // Distrito Federal
+  8: 'ES', // Espírito Santo
+  9: 'GO', // Goiás
   10: 'MA', // Maranhão
   11: 'MT', // Mato Grosso
   12: 'MS', // Mato Grosso do Sul
@@ -27,4 +27,3 @@ export const EstadoEnum = {
   26: 'SE', // Sergipe
   27: 'TO', // Tocantins
 };
-

@@ -5,10 +5,9 @@ import { PrismaService } from '../commom/prisma/prisma.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { ErrorResponse } from '../commom/response/errorResponse';
 
-
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
   async create(createAuthDto: CreateUserDTO) {
     try {
       const jumper = RandomJumper();
@@ -23,10 +22,10 @@ export class UserService {
       return user;
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao criar usuário",
+        message: 'Erro ao criar usuário',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
+        errorsCode: error.code,
       });
     }
   }
@@ -34,15 +33,15 @@ export class UserService {
     try {
       return this.prisma.user.findFirst({
         where: { email: email },
-        select: { id: true }
-      })
+        select: { id: true },
+      });
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao buscar clínica",
+        message: 'Erro ao buscar clínica',
         statusCode: 400,
         errorsCode: error.code,
-        details: error.meta
-      })
+        details: error.meta,
+      });
     }
   }
 }

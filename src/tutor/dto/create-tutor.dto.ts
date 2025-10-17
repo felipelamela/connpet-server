@@ -1,4 +1,13 @@
-import { IsString, IsEmail, IsNotEmpty, IsOptional, IsInt, MinLength, Length, MaxLength } from 'class-validator';
+import {
+  IsString,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsInt,
+  MinLength,
+  Length,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateTutorDTO {
   @IsString()
@@ -19,7 +28,9 @@ export class CreateTutorDTO {
 
   @IsString()
   @IsNotEmpty({ message: 'O CEP é obrigatório.' })
-  @Length(8, 8, { message: 'O CEP deve conter exatamente 8 dígitos (somente números).' })
+  @Length(8, 8, {
+    message: 'O CEP deve conter exatamente 8 dígitos (somente números).',
+  })
   cep: string;
 
   @IsString()
@@ -34,7 +45,9 @@ export class CreateTutorDTO {
 
   @IsOptional()
   @IsString()
-  @MaxLength(255, { message: 'O complemento pode ter no máximo 255 caracteres.' })
+  @MaxLength(255, {
+    message: 'O complemento pode ter no máximo 255 caracteres.',
+  })
   complement?: string;
 
   @IsString()

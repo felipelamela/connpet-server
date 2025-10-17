@@ -3,6 +3,6 @@ import { AddressService } from './address.service';
 
 @Module({
   providers: [AddressService],
-  exports: [AddressService]
+  exports: [AddressService],
 })
-export class AddressModule { }
+export class AddressModule {}

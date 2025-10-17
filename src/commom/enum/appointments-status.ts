@@ -4,4 +4,4 @@ export const appointmentsStatusEnum = {
   3: 'INPROCESS',
   4: 'COMPLETED',
   5: 'CANCELLED',
-}
+};

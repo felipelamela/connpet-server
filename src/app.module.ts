@@ -12,10 +12,12 @@ import { TutorModule } from './tutor/tutor.module';
 import { AppointmentModule } from './appointment/appointment.module';
 import { ClinicVetUserModule } from './clinic-vet/modules/clinic-vet-user/clinic-vet-user.module';
 import { JwtModule } from '@nestjs/jwt';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_FILTER } from '@nestjs/core';
 import { JwtAuthGuard } from './commom/guardians/jwt-auth.guardian';
 import { ExamModule } from './exam/exam.module';
 import { InternationModule } from './internation/internation.module';
+import { SecurityModule } from './security/security.module';
+import { DDoSExceptionFilter } from './commom/filters/ddos-exception.filter';
 
 @Module({
   imports: [
@@ -27,6 +29,7 @@ import { InternationModule } from './internation/internation.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    SecurityModule, // Módulo de segurança e proteção DDoS
     AuthModule,
     PrismaModule,
     PrismaModule,
@@ -38,7 +41,8 @@ import { InternationModule } from './internation/internation.module';
     AppointmentModule,
     ClinicVetUserModule,
     ExamModule,
-    InternationModule,],
+    InternationModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
@@ -46,6 +50,10 @@ import { InternationModule } from './internation/internation.module';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    {
+      provide: APP_FILTER,
+      useClass: DDoSExceptionFilter,
+    },
   ],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,4 +1,13 @@
-import { IsString, IsOptional, IsEmail, Length, Matches, IsNumber, IsNotEmpty, IsUUID } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsEmail,
+  Length,
+  Matches,
+  IsNumber,
+  IsNotEmpty,
+  IsUUID,
+} from 'class-validator';
 
 export class CreateClinicVetUserDto {
   @IsString()
@@ -27,5 +36,4 @@ export class CreateClinicVetUserDto {
   @IsString()
   @Length(0, 15)
   cellphone?: string;
-
 }

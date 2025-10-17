@@ -1,1 +1,1 @@
-export class Tutor { }
+export class Tutor {}

@@ -44,6 +44,7 @@ model VeterinarianProfile {
   ResultExam       ResultExam[]
   employee         UserProfileEmployee @relation(fields: [employeeId], references: [id])
   Internation      Internation[]
+  vaccinations     Vaccination[]
 }
 
 model UserProfileTutor {
@@ -81,6 +82,7 @@ model Pet {
   Internation        Internation[]
   InternationService InternationService[]
   InternationProduct InternationProduct[]
+  vaccinations       Vaccination[]
 }
 
 model VeterinaryClinic {
@@ -111,6 +113,8 @@ model VeterinaryClinic {
   employees        UserProfileEmployee[]
   address          Address?              @relation(fields: [addressId], references: [id])
   Internation      Internation[]
+  vaccinations     Vaccination[]
+  vaccineTypes     VaccineType[]
 }
 
 model Plan {
@@ -312,6 +316,52 @@ model InternationProduct {
   pet           Pet         @relation(fields: [petId], references: [id])
 }
 
+model VaccineType {
+  id                    String            @id @default(uuid()) @db.Uuid
+  name                  String            @db.VarChar(255)
+  description           String?
+  species               SpeciesEnum
+  manufacturer          String?           @db.VarChar(255)
+  dosesRequired         Int               @default(1)
+  intervalDays          Int?
+  boosterIntervalMonths Int?
+  isRequired            Boolean           @default(false)
+  ageApplicationMonths  Int?
+  observations          String?
+  active                Boolean           @default(true)
+  clinicId              String?           @db.Uuid
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  clinic                VeterinaryClinic? @relation(fields: [clinicId], references: [id])
+  vaccinations          Vaccination[]
+}
+
+model Vaccination {
+  id                    String              @id @default(uuid()) @db.Uuid
+  petId                 String              @db.Uuid
+  veterinarianProfileId String              @db.Uuid
+  vaccineTypeId         String              @db.Uuid
+  clinicId              String              @db.Uuid
+  applicationDate       DateTime
+  batchNumber           String              @db.VarChar(100)
+  manufacturer          String              @db.VarChar(255)
+  expirationDate        DateTime
+  nextDoseDate          DateTime?
+  doseNumber            Int                 @default(1)
+  adverseReaction       String?
+  observations          String?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  pet                   Pet                 @relation(fields: [petId], references: [id])
+  veterinarianProfile   VeterinarianProfile @relation(fields: [veterinarianProfileId], references: [id])
+  vaccineType           VaccineType         @relation(fields: [vaccineTypeId], references: [id])
+  clinic                VeterinaryClinic    @relation(fields: [clinicId], references: [id])
+
+  @@index([petId])
+  @@index([clinicId])
+  @@index([applicationDate])
+}
+
 enum RoleEnum {
   ADMIN
   CLINIC_ADMIN
@@ -382,4 +432,17 @@ enum Usage {
   CLINIC
   PETSHOP
   SELL
+}
+
+enum SpeciesEnum {
+  DOG
+  CAT
+  BIRD
+  RABBIT
+  HAMSTER
+  GUINEA_PIG
+  FERRET
+  REPTILE
+  FISH
+  OTHER
 }

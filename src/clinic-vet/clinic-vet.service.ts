@@ -10,32 +10,43 @@ import { generateRandomPassword } from '../commom/system/generateRandomPassword'
 
 @Injectable()
 export class ClinicVetService {
-  constructor(private readonly clinicVetHandlers: ClinicVetHandlers) { }
-  async create(createClinicVetDto: CreateClinicVetDto): Promise<{ user: User, clinic: VeterinaryClinic }> {
+  constructor(private readonly clinicVetHandlers: ClinicVetHandlers) {}
+  async create(
+    createClinicVetDto: CreateClinicVetDto,
+  ): Promise<{ user: User; clinic: VeterinaryClinic }> {
     try {
       const userEntity = new UserEntity({
         ...createClinicVetDto,
         status: true,
-      })
-      const clinicEntity = new ClinicVetEntity(createClinicVetDto)
-      await this.clinicVetHandlers.validateCreateClinic({ userEmail: userEntity.email, cnpj: clinicEntity.cnpj })
-      const createdClinic = await this.clinicVetHandlers.createClinic({ createClinic: clinicEntity, user: userEntity })
-      return createdClinic
+      });
+      const clinicEntity = new ClinicVetEntity(createClinicVetDto);
+      await this.clinicVetHandlers.validateCreateClinic({
+        userEmail: userEntity.email,
+        cnpj: clinicEntity.cnpj,
+      });
+      const createdClinic = await this.clinicVetHandlers.createClinic({
+        createClinic: clinicEntity,
+        user: userEntity,
+      });
+      return createdClinic;
     } catch (error) {
-      throw new ErrorResponse(error)
-    };
+      throw new ErrorResponse(error);
+    }
   }
   async createUserProfile(createUserProfileDto: CreateUserProfileDto) {
     try {
-      const password = generateRandomPassword()
+      const password = generateRandomPassword();
       const userEntity = new UserEntity({
         ...createUserProfileDto,
         password,
         status: true,
-      })
-      await this.clinicVetHandlers.createUserProfile({ user: userEntity, companyId: createUserProfileDto.clinicId })
+      });
+      await this.clinicVetHandlers.createUserProfile({
+        user: userEntity,
+        companyId: createUserProfileDto.clinicId,
+      });
     } catch (error) {
-      throw new ErrorResponse(error)
+      throw new ErrorResponse(error);
     }
   }
 }

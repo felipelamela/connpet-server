@@ -1,4 +1,3 @@
-
 interface IClinicVet {
   cnpj: string;
   socialName: string;
@@ -31,7 +30,7 @@ export class ClinicVetEntity {
   active: boolean;
 
   constructor(clinic: IClinicVet) {
-    this.cnpj = clinic.cnpj
+    this.cnpj = clinic.cnpj;
     this.socialName = clinic.socialName;
     this.tradeName = clinic.tradeName ?? null;
     this.email = clinic.email;

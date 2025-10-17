@@ -6,69 +6,69 @@ import { ErrorResponse } from '../../../commom/response/errorResponse';
 
 @Injectable()
 export class ProductService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
   async create(createProductDto: CreateProductDto) {
     try {
-      return await this.prisma.product.create({ data: createProductDto })
+      return await this.prisma.product.create({ data: createProductDto });
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
 
   async findAll() {
     try {
-      return ""
+      return '';
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
 
   async findOne(id: number) {
     try {
-      return ""
+      return '';
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
 
   async update(id: number, updateProductDto: UpdateProductDto) {
     try {
-      return ""
+      return '';
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
 
   async remove(id: number) {
     try {
-      return ""
+      return '';
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
 }

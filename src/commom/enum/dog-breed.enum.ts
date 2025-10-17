@@ -89,4 +89,3 @@ export const DogBreedEnum = {
   PastorBranco: 87,
   SRD: 88, // Sem Raça Definida (SRD)
 };
-

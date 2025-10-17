@@ -7,10 +7,10 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello(): Object {
+  getHello(): object {
     return this.appService.getHello();
   }
-  
+
   @Get('metrics')
   getMetrics() {
     return client.register.metrics();

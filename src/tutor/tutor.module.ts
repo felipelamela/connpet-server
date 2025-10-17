@@ -12,4 +12,4 @@ import { PetModule } from '../pet/pet.module';
   controllers: [TutorController],
   providers: [TutorService, TutorRepository, PetService],
 })
-export class TutorModule { }
+export class TutorModule {}

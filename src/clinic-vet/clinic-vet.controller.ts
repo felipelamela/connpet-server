@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ClinicVetService } from './clinic-vet.service';
 import { CreateClinicVetDto } from './dto/create-clinic-vet.dto';
 import { UpdateClinicVetDto } from './dto/update-clinic-vet.dto';
@@ -9,7 +17,7 @@ import { Public } from '../commom/decorators/public.decorator';
 
 @Controller('clinic-vet')
 export class ClinicVetController {
-  constructor(private readonly clinicVetService: ClinicVetService) { }
+  constructor(private readonly clinicVetService: ClinicVetService) {}
 
   @Public()
   @Post()
@@ -19,17 +27,17 @@ export class ClinicVetController {
       //criar funcionalidade de envio de email após sucesso do cadastro
       return new SuccessResponse('Clinica criada com sucesso', newClinic);
     } catch (error) {
-      return new ErrorResponse(error)
+      return new ErrorResponse(error);
     }
   }
 
   @Post('/plans')
-  async createClinicPlans(@Body() createClinicPlans: { idClinic: string, idPlan: string }) {
+  async createClinicPlans(
+    @Body() createClinicPlans: { idClinic: string; idPlan: string },
+  ) {
     try {
-
     } catch (error) {
-      return new ErrorResponse(error)
-
+      return new ErrorResponse(error);
     }
   }
 }

@@ -3,4 +3,4 @@ export const paymentStatusEnum = {
   2: 'COMPLETED',
   3: 'FAILED',
   4: 'CANCELLED',
-}
+};

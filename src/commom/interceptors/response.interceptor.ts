@@ -1,4 +1,9 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+import {
+  CallHandler,
+  ExecutionContext,
+  Injectable,
+  NestInterceptor,
+} from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FastifyReply } from 'fastify';
@@ -17,6 +22,7 @@ export class ResponseInterceptor implements NestInterceptor {
         if (!(data instanceof ErrorResponse)) {
           return data;
         }
+        console.log(data);
         logger.error({
           message: data.message,
           errors: data.errorsCode,

@@ -7,55 +7,53 @@ import { ErrorResponse } from '../commom/response/errorResponse';
 export class AppointmentService {
   async create(createAppointmentDto: CreateAppointmentDto) {
     try {
-      return ""
+      return '';
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
 
   async findAll() {
     try {
-      return ""
+      return '';
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
 
   async findOne(id: number) {
     try {
-      return ""
+      return '';
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
 
   async update(id: number, updateAppointmentDto: UpdateAppointmentDto) {
     try {
-      return ""
+      return '';
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
-
-
 }

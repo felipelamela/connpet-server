@@ -12,4 +12,4 @@ import { ClinicVetUserModule } from './modules/clinic-vet-user/clinic-vet-user.m
   controllers: [ClinicVetController],
   providers: [ClinicVetService, clinicVetRepository, ClinicVetHandlers],
 })
-export class ClinicVetModule { }
+export class ClinicVetModule {}

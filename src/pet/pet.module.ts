@@ -7,6 +7,6 @@ import PetRepository from './pet.repository';
 @Module({
   controllers: [PetController],
   providers: [PetService, PetHandler, PetRepository],
-  exports: [PetService, PetHandler]
+  exports: [PetService, PetHandler],
 })
-export class PetModule { }
+export class PetModule {}

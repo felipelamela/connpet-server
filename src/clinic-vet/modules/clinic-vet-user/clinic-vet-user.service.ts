@@ -10,77 +10,77 @@ import { ErrorResponse } from '../../../commom/response/errorResponse';
 
 @Injectable()
 export class ClinicVetUserService {
-  constructor(
-    private readonly userService: UserService
-  ) { }
+  constructor(private readonly userService: UserService) {}
   async create(createClinicVetUserDto: CreateClinicVetUserDto) {
+    const password = generateRandomPassword();
 
-    const password = generateRandomPassword()
+    const userEntity = new UserEntity({
+      ...createClinicVetUserDto,
+      password,
+      status: true,
+    });
 
-    const userEntity = new UserEntity({ ...createClinicVetUserDto, password, status: true })
-
-    const userId = await this.userService.create(userEntity)
+    const userId = await this.userService.create(userEntity);
 
     const userProfile = new UserProfileEmployeeEntity({
       ...createClinicVetUserDto,
       userId: userId.id,
 
-      roles: RoleEnum[createClinicVetUserDto.roles]
-    })
-
+      roles: RoleEnum[createClinicVetUserDto.roles],
+    });
 
     return userProfile;
   }
 
   findAll() {
     try {
-      return ""
+      return '';
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
 
   findOne(id: number) {
     try {
-      return ""
+      return '';
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
 
   update(id: number, updateClinicVetUserDto: UpdateClinicVetUserDto) {
     try {
-      return ""
+      return '';
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
 
   remove(id: number) {
     try {
-      return ""
+      return '';
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar plano.",
+        message: 'Erro ao cadastrar plano.',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
 }

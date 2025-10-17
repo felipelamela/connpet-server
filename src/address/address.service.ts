@@ -7,29 +7,29 @@ import { ErrorResponse } from '../commom/response/errorResponse';
 
 @Injectable()
 export class AddressService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createAddressDto: CreateAddressDto) {
     try {
-      const state = EstadoEnum[createAddressDto.state]
+      const state = EstadoEnum[createAddressDto.state];
       return await this.prisma.address.create({
         data: {
           ...createAddressDto,
-          state
-        }
-      })
+          state,
+        },
+      });
     } catch (error) {
       throw new ErrorResponse({
-        message: "Erro ao cadastrar endereço",
+        message: 'Erro ao cadastrar endereço',
         details: error.meta,
         statusCode: 400,
-        errorsCode: error.code
-      })
+        errorsCode: error.code,
+      });
     }
   }
   async update(id: string, updateAddressDto: UpdateAddressDto) {
     try {
-      return true
+      return true;
       // return await this.prisma.address.update({
       // where: {
       // id: id
@@ -37,7 +37,7 @@ export class AddressService {
       // data: updateAddressDto
       // })
     } catch {
-      throw new Error("Erro ao atualizar endereço")
+      throw new Error('Erro ao atualizar endereço');
     }
   }
 }

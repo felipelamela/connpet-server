@@ -10,7 +10,9 @@ import {
 export class CreateAddressDto {
   @IsString()
   @IsNotEmpty({ message: 'O CEP é obrigatório.' })
-  @Length(8, 8, { message: 'O CEP deve conter exatamente 8 dígitos (somente números).' })
+  @Length(8, 8, {
+    message: 'O CEP deve conter exatamente 8 dígitos (somente números).',
+  })
   cep: string;
 
   @IsString()
@@ -25,7 +27,9 @@ export class CreateAddressDto {
 
   @IsOptional()
   @IsString()
-  @MaxLength(255, { message: 'O complemento pode ter no máximo 255 caracteres.' })
+  @MaxLength(255, {
+    message: 'O complemento pode ter no máximo 255 caracteres.',
+  })
   complement?: string;
 
   @IsString()

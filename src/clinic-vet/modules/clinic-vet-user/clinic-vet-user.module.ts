@@ -8,6 +8,6 @@ import { UserService } from '../../../user/user.service';
   imports: [UserModule],
   controllers: [ClinicVetUserController],
   providers: [ClinicVetUserService, UserService],
-  exports: [ClinicVetUserService, UserService]
+  exports: [ClinicVetUserService, UserService],
 })
-export class ClinicVetUserModule { }
+export class ClinicVetUserModule {}

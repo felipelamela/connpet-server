@@ -1,4 +1,14 @@
-import { IsString, IsNotEmpty, IsOptional, IsUUID, IsInt, IsDateString, IsNumber, IsBoolean, MaxLength } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsUUID,
+  IsInt,
+  IsDateString,
+  IsNumber,
+  IsBoolean,
+  MaxLength,
+} from 'class-validator';
 
 export class CreatePetDto {
   @IsString()
