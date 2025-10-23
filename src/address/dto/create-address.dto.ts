@@ -2,15 +2,18 @@ import {
   IsString,
   IsNotEmpty,
   IsOptional,
-  IsInt,
   Length,
   MaxLength,
+  IsEnum,
 } from 'class-validator';
+import { StateEnum } from '@prisma/client';
 
 export class CreateAddressDto {
   @IsString()
   @IsNotEmpty({ message: 'O CEP é obrigatório.' })
-  @Length(8, 8, { message: 'O CEP deve conter exatamente 8 dígitos (somente números).' })
+  @Length(8, 8, {
+    message: 'O CEP deve conter exatamente 8 dígitos (somente números).',
+  })
   cep: string;
 
   @IsString()
@@ -25,7 +28,9 @@ export class CreateAddressDto {
 
   @IsOptional()
   @IsString()
-  @MaxLength(255, { message: 'O complemento pode ter no máximo 255 caracteres.' })
+  @MaxLength(255, {
+    message: 'O complemento pode ter no máximo 255 caracteres.',
+  })
   complement?: string;
 
   @IsString()
@@ -38,9 +43,9 @@ export class CreateAddressDto {
   @MaxLength(100, { message: 'A cidade pode ter no máximo 100 caracteres.' })
   city: string;
 
-  @IsInt({ message: 'O estado deve ser um número inteiro.' })
+  @IsEnum(StateEnum, { message: 'O estado deve ser um estado válido do Brasil.' })
   @IsNotEmpty({ message: 'O estado é obrigatório.' })
-  state: number;
+  state: StateEnum;
 
   @IsOptional()
   @IsString()

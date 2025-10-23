@@ -1,18 +1,22 @@
-import { PartialType } from "@nestjs/mapped-types";
-import { User, VeterinaryClinic } from "@prisma/client";
+import { Pet, UserProfileEmployee, UserProfileTutor } from "@prisma/client";
 
-export class AuthUserPresenter{
+export class AuthUserPresenter {
+  expiresIn: number;
   id: string;
-  name:string;
-  email:string;
-  role:number | null;
-  veterinaryClinicId?: string | null
-  petUsers:[]
-  constructor(user: User) {
+  name: string;
+  email: string;
+  access_token: string;
+  petUsers: Pet[] | null;
+  userProfileEmployee: UserProfileEmployee[] | null;
+  userProfileTutor: UserProfileTutor | null;
+  constructor(user: any) {
+    this.expiresIn = user.expiresIn;
     this.id = user.id;
-    this.name = user.name,
-    this.email = user.email,
-    this.role = user.role,
-    this.veterinaryClinicId = user.veterinaryClinicId
+    this.name = user.name;
+    this.email = user.email;
+    this.userProfileEmployee = user.userProfileEmployee;
+    this.userProfileTutor = user.userProfileTutor;
+    this.access_token = user.access_token;
+    this.petUsers = user.petUsers;
   }
 }

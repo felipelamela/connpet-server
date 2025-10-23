@@ -1,26 +1,49 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePlanDto } from './dto/create-plan.dto';
 import { UpdatePlanDto } from './dto/update-plan.dto';
+import { PlansRepository } from './plans.repository';
+import { ErrorResponse } from '../commom/response/errorResponse';
 
 @Injectable()
 export class PlansService {
-  create(createPlanDto: CreatePlanDto) {
-    return 'This action adds a new plan';
+  constructor(private readonly plansRepository: PlansRepository) {}
+  async create(createPlanDto: CreatePlanDto) {
+    try {
+      return await this.plansRepository.create(createPlanDto);
+    } catch (error) {
+      throw new ErrorResponse(error.message);
+    }
   }
 
-  findAll() {
-    return `This action returns all plans`;
+  async findAll() {
+    try {
+      return await this.plansRepository.getPlans();
+    } catch (error) {
+      throw new ErrorResponse(error.message);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} plan`;
+  async findOne(id: string) {
+    try {
+      return await this.plansRepository.getPlansById(id);
+    } catch (error) {
+      throw new ErrorResponse(error.message);
+    }
   }
 
-  update(id: number, updatePlanDto: UpdatePlanDto) {
-    return `This action updates a #${id} plan`;
+  async update(id: string, updatePlanDto: UpdatePlanDto) {
+    try {
+      return await this.plansRepository.update({ id, plan: updatePlanDto });
+    } catch (error) {
+      throw new ErrorResponse(error.message);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} plan`;
+  async changeStatus(id: string, status: boolean) {
+    try {
+      return await this.plansRepository.changeStatus({ id, status });
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 }

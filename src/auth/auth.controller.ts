@@ -1,46 +1,104 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Res,
+  Get,
+  UseGuards,
+  HttpCode,
+  Req,
+} from '@nestjs/common';
+import type { FastifyReply } from 'fastify';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login.auth.dto';
-import { CreateNewUserDTO } from './dto/create-new-user.dto';
-import { SuccessResponse } from 'src/response/successResponse';
-import { ErrorResponse } from 'src/response/errorResponse';
-import type { FastifyReply } from 'fastify';
-import { ErrorEnum } from 'src/enum/error.enum';
-import { CreateNewTutorDTO } from './dto/create-new-tutor.dto';
-import { AuthUserPresenter } from './auth-user.presenter';
+import { ErrorResponse } from 'src/commom/response/errorResponse';
+import { Public } from '../commom/decorators/public.decorator';
+import { JwtAuthGuard } from '../commom/guardians/jwt-auth.guardian';
+import { CreateUserPanelDto } from './dto/create-user-panel.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post('login')
-  async login(@Body() loginAuthDto: LoginAuthDto) {
+  @HttpCode(200)
+  async login(
+    @Body() loginAuthDto: LoginAuthDto,
+    @Res({ passthrough: true }) reply: FastifyReply,
+  ) {
     try {
-      const login = await this.authService.login(loginAuthDto);
-      return new AuthUserPresenter(login)
-    } catch (error) {
-      return new ErrorResponse(error.message, 404, ErrorEnum.USER_CREATE_ERROR)
-    }
+      const authResponse = await this.authService.login(loginAuthDto);
+      
+      // Definir cookie HttpOnly + Secure + SameSite (para autenticação web)
+      reply.setCookie('access_token', authResponse.access_token, {
+        httpOnly: true,        // Não acessível via JavaScript (XSS protection)
+        secure: process.env.NODE_ENV === 'production', // HTTPS em produção
+        sameSite: 'lax',       // Proteção contra CSRF
+        maxAge: authResponse.expires_in * 1000, // Converte para milissegundos
+        path: '/',             // Disponível em todo o site
+      });
 
+      // Retorna dados completos (incluindo token para mobile/outras plataformas)
+      return {
+        access_token: authResponse.access_token,  // ← Token no body
+        token_type: authResponse.token_type,
+        expires_in: authResponse.expires_in,
+        user: authResponse.user,
+      };
+    } catch (error) {
+      return new ErrorResponse(error);
+    }
   }
 
-  @Post('new-user')
-  async createNewUser(@Body() createNewUser: CreateNewUserDTO) {
+  @Public()
+  @Post('logout')
+  async logout(@Res({ passthrough: true }) reply: FastifyReply) {
     try {
-      const newUser = await this.authService.create(createNewUser);
-      return new SuccessResponse('Usuário criado com sucesso', newUser);
+      // Limpar o cookie
+      reply.clearCookie('access_token', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+      });
+
+      return { message: 'Logout realizado com sucesso' };
     } catch (error) {
-      return new ErrorResponse(error.message, 404, ErrorEnum.USER_CREATE_ERROR)
+      return new ErrorResponse(error);
     }
   }
 
-  @Post('new-tutor')
-  async createNewTutor(@Body() createNewTutor: CreateNewTutorDTO) {
+  @UseGuards(JwtAuthGuard)
+  @Get('verify')
+  async verify() {
+    // Se chegou aqui, o guard validou o token do cookie
+    return { authenticated: true };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async getMe(@Req() request: any) {
+    // Retorna dados do usuário do JWT (extraído do cookie pelo guard)
+    const user = request.user;
+    
+    return {
+      id: user.sub,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      companyId: user.companyId || null,
+    };
+  }
+
+
+  @Post('create-new-system')
+  async createUserSystem(@Body() createUserPanelDto: CreateUserPanelDto){
     try {
-      const newUser = await this.authService.createTutor(createNewTutor);
-      return new SuccessResponse('Usuário criado com sucesso', newUser);
+      const user = await this.authService.createUserSystem(createUserPanelDto);
+      return user;
     } catch (error) {
-      return new ErrorResponse(error.message, 404, ErrorEnum.USER_CREATE_ERROR)
+      return new ErrorResponse(error);
     }
   }
 }

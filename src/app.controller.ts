@@ -1,17 +1,24 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Header } from '@nestjs/common';
 import { AppService } from './app.service';
-import client from 'prom-client';
+import { MetricsService } from './commom/services/metrics.service';
+import { Public } from './commom/decorators/public.decorator';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly metricsService: MetricsService,
+  ) {}
 
   @Get()
-  getHello(): Object {
+  getHello(): object {
     return this.appService.getHello();
   }
+
+  @Public()
   @Get('metrics')
-  getMetrics() {
-    return client.register.metrics();
+  @Header('Content-Type', 'text/plain; version=0.0.4; charset=utf-8')
+  async getMetrics() {
+    return this.metricsService.getMetrics();
   }
 }

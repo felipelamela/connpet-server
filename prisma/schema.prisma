@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,116 +7,588 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id                  String            @id @default(uuid()) @db.Uuid
-  name                String
-  email               String            @unique
-  password            String
-  document            String?
-  status              Boolean           @default(true)
-  role                Int
-  jumper              Int
-  veterinaryClinicId  String?           @db.Uuid
-  veterinaryClinic    VeterinaryClinic? @relation(fields: [veterinaryClinicId], references: [id])
-  petUsers            PetUser[]
-  createdAt           DateTime          @default(now())
+//////////////////////////////////////////////////////////
+// ENUMS
+//////////////////////////////////////////////////////////
+
+enum RoleEnum {
+  ADMIN
+  CLINIC_ADMIN
+  CLINIC_VET
+  CLINIC_STAFF
+  CLINIC_RECEPTIONIST
 }
+
+enum GenderEnum {
+  MALE
+  FEMALE
+}
+
+enum AppointmentStatusEnum {
+  PENDING
+  CONFIRMED
+  INPROCESS
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum PaymentOriginEnum {
+  CLINIC
+  PETSHOP
+}
+
+enum StateEnum {
+  AC
+  AL
+  AP
+  AM
+  BA
+  CE
+  DF
+  ES
+  GO
+  MA
+  MT
+  MS
+  MG
+  PA
+  PB
+  PR
+  PE
+  PI
+  RJ
+  RN
+  RS
+  RO
+  RR
+  SC
+  SP
+  SE
+  TO
+}
+
+enum ProductType {
+  MEDICINE
+  TOY
+  FOOD
+  HYGIENE
+  ACCESSORY
+}
+
+enum SpeciesEnum {
+  DOG
+  CAT
+  BIRD
+  RABBIT
+  HAMSTER
+  GUINEA_PIG
+  FERRET
+  REPTILE
+  FISH
+  OTHER
+}
+
+enum PanelTypeEnum {
+  CLINIC
+  PETSHOP
+  GROOMING
+}
+
+enum InternationStatusEnum {
+  IN_PROGRESS
+  DISCHARGED
+  CANCELLED
+}
+
+//////////////////////////////////////////////////////////
+// EMPRESAS, USUÁRIOS E ENDEREÇOS
+//////////////////////////////////////////////////////////
 
 model Address {
-  id              String                @id @default(uuid()) @db.Uuid
-  cep             String                @db.VarChar(8)
-  street          String                @db.VarChar(255)
-  number          String                @db.VarChar(10)
-  complement      String?               @db.VarChar(255)
-  neighborhood    String                @db.VarChar(100)
-  city            String                @db.VarChar(100)
-  state           Int                   @db.Integer
-  country         String                @default("Brasil") @db.VarChar(100)
-  createdAt       DateTime              @default(now())
-  updatedAt       DateTime              @updatedAt
-  veterinaryClinics VeterinaryClinic[]
+  id            String     @id @default(uuid())
+  cep           String     @db.VarChar(8)
+  street        String
+  number        String     @db.VarChar(10)
+  complement    String?
+  neighborhood  String
+  city          String
+  state         StateEnum
+  country       String     @default("Brasil")
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 
+  Company               Company[]
+  UserProfileEmployee    UserProfileEmployee[]
+  UserProfileTutor       UserProfileTutor[]
 }
 
-model VeterinaryClinic {
-  id                          String    @id @default(uuid()) @db.Uuid
-  socialNumber                String    @unique @db.VarChar(14)
-  socialName                  String    @db.VarChar(255)
-  tradeName                   String?   @db.VarChar(255)
-  stateRegistration           String?   @db.VarChar(20)
-  municipalRegistration       String?   @db.VarChar(20)
-  email                       String    @db.VarChar(255)
-  phone                       String?   @db.VarChar(15)
-  cellphone                   String?   @db.VarChar(15)
-  crmv                        String?   @db.VarChar(20)
-  crmvState                   Int?      @db.Integer
-  technicalManager            String?   @db.VarChar(255)
-  managerCrmv                 String?   @db.VarChar(20)
-  openingTime                 String?   @db.VarChar(5)
-  closingTime                 String?   @db.VarChar(5)
-  emergencyService            Boolean?  @default(false)
-  observations                String?   @db.Text
-  active                      Boolean   @default(true)
-  addressId                   String?    @db.Uuid
-  address                     Address?   @relation(fields: [addressId], references: [id])
-  users                       User[]
-  clinicPlan                  ClinicPlan[]
-  createdAt                   DateTime  @default(now())
-  updatedAt                   DateTime  @updatedAt
+model Company {
+  id          String   @id @default(uuid())
+  socialName  String
+  tradeName   String
+  cnpj        String   @unique
+  email       String
+  phone       String?
+  addressId   String?
+  address     Address? @relation(fields: [addressId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
 
+  panels      Panel[]
+  products    Product[]
+  employees   UserProfileEmployee[]
+  vaccinations Vaccination[]
+  paymentOrders PaymentOrder[]
+  internations Internation[]
+  exams       Exam[]
+  resultExams ResultExam[]
+  appointments Appointment[]
+  clinicVaccines ClinicVaccine[]
+
+  @@index([cnpj])
+  @@index([email])
+  @@index([createdAt])
 }
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  employeeProfiles UserProfileEmployee[]
+  tutorProfile     UserProfileTutor?
+
+  @@index([status])
+}
+
+model UserProfileEmployee {
+  id         String   @id @default(uuid())
+  userId     String
+  companyId  String
+  document   String?
+  crmv       String?
+  crmvState  StateEnum?
+  phone      String?
+  roles      RoleEnum
+  addressId  String?
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id])
+  company  Company  @relation(fields: [companyId], references: [id])
+  address  Address? @relation(fields: [addressId], references: [id])
+  internations Internation[]
+  medications Medication[]
+
+  @@index([userId])
+  @@index([companyId])
+  @@index([roles])
+  @@index([crmv])
+}
+
+model UserProfileTutor {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  document  String?
+  phone     String?
+  addressId String?
+  createdAt DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id])
+  address  Address? @relation(fields: [addressId], references: [id])
+  pets     Pet[]
+  notes    NotesPet[]
+
+  @@index([userId])
+  @@index([document])
+  @@index([phone])
+}
+
+//////////////////////////////////////////////////////////
+// PETS E PERFIS
+//////////////////////////////////////////////////////////
 
 model Pet {
-  id              String    @id @default(uuid()) @db.Uuid
-  name            String    @db.VarChar(100)
-  species         String    @db.VarChar(50)
-  breed           Int       @db.Integer
-  gender          String    @db.VarChar(10)
+  id              String       @id @default(uuid())
+  tutorId         String
+  name            String
+  species         SpeciesEnum
+  breed           Int
   birthDate       DateTime?
-  color           String?   @db.VarChar(50)
-  weight          Float?
-  microchipNumber String?   @unique @db.VarChar(15)
-  observations    String?   @db.Text
-  active          Boolean   @default(true)
-  petUsers        PetUser[]
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  color           String?
+  weight          Decimal?
+  microchipNumber String?      @unique
+  observations    String?
+  gender          GenderEnum
+  active          Boolean      @default(true)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  deletedAt       DateTime?
+
+  tutor           UserProfileTutor @relation(fields: [tutorId], references: [id])
+  vaccinations    Vaccination[]
+  appointments    Appointment[]
+  internations    Internation[]
+  medications     Medication[]
+  exams           Exam[]
+  notes           NotesPet[]
+
+  @@index([tutorId])
+  @@index([active])
+  @@index([name])
+  @@index([createdAt])
+  @@index([tutorId, createdAt])
 }
 
-model PetUser {
-  id               String   @id @default(uuid()) @db.Uuid
-  userId           String   @db.Uuid
-  petId            String   @db.Uuid
-  user             User     @relation(fields: [userId], references: [id])
-  pet              Pet      @relation(fields: [petId], references: [id])
-  createdAt        DateTime @default(now())
+model NotesPet {
+  id          String   @id @default(uuid())
+  tutorId     String
+  petId       String
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
 
-  @@unique([userId, petId])
+  tutor UserProfileTutor @relation(fields: [tutorId], references: [id])
+  pet   Pet              @relation(fields: [petId], references: [id])
+
+  @@index([petId])
+  @@index([tutorId])
+  @@index([createdAt])
 }
+
+//////////////////////////////////////////////////////////
+// PLANOS, PAINÉIS E SERVIÇOS
+//////////////////////////////////////////////////////////
 
 model Plan {
-  id                 String    @id @default(uuid()) @db.Uuid
-  name               String    @db.VarChar(255)
-  description        String?   @db.Text
-  price              Float
-  billingPeriod      String     @default("MONTHLY") // criar enumerador
-  maxUsers           Int?      // número máximo de usuários que a clínica pode ter
-  active             Boolean   @default(true)
-  clinicPlan         ClinicPlan[]
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  price       Decimal
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
+  clinicPlans ClinicPlan[]
+
+  @@index([active])
+}
+
+model Panel {
+  id          String     @id @default(uuid())
+  companyId   String
+  type        PanelTypeEnum
+  active      Boolean    @default(true)
+  openingTime DateTime?
+  closingTime DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  company     Company    @relation(fields: [companyId], references: [id])
+  clinicPlans ClinicPlan[]
+
+  @@index([companyId])
+  @@index([type])
 }
 
 model ClinicPlan {
-  id                 String                 @id @default(uuid()) @db.Uuid
-  active             Boolean                @default(true)
-  veterinaryClinicId String                 @db.Uuid
-  veterinaryClinic   VeterinaryClinic       @relation(fields: [veterinaryClinicId], references: [id])
-  planId             String                 @db.Uuid
-  plan               Plan                   @relation(fields: [planId], references: [id])
-  createdAt          DateTime               @default(now())
-  updatedAt          DateTime               @updatedAt
-  @@unique([veterinaryClinicId, planId])
+  id           String   @id @default(uuid())
+  panelId      String
+  planId       String
+  billingPeriod Int     @default(3)
+  maxUsers     Int?
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
+  panel        Panel    @relation(fields: [panelId], references: [id])
+  plan         Plan     @relation(fields: [planId], references: [id])
+
+  @@index([panelId])
+  @@index([planId])
+}
+
+//////////////////////////////////////////////////////////
+// PRODUTOS E ESTOQUE
+//////////////////////////////////////////////////////////
+
+model Product {
+  id          String   @id @default(uuid())
+  companyId   String
+  name        String
+  description String?
+  type        ProductType
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+
+  company     Company  @relation(fields: [companyId], references: [id])
+  batches     ProductBatch[]
+
+  @@unique([companyId, name])
+  @@index([companyId])
+  @@index([type])
+}
+
+model ProductBatch {
+  id             String   @id @default(uuid())
+  productId      String
+  batchNumber    String?
+  manufacturer   String?
+  quantity       Int
+  pricePay       Decimal
+  priceSale      Decimal
+  expirationDate DateTime
+  validatedAt    DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  product Product @relation(fields: [productId], references: [id])
+  clinicVaccines ClinicVaccine[]
+  medications Medication[]
+  paymentItems PaymentItem[]
+
+  @@index([productId])
+  @@index([expirationDate])
+}
+
+//////////////////////////////////////////////////////////
+// VACINAS
+//////////////////////////////////////////////////////////
+
+model VaccineType {
+  id             String      @id @default(uuid())
+  name           String
+  description    String?
+  species        SpeciesEnum
+  dosesRequired  Int         @default(1)
+  createdAt      DateTime    @default(now())
+  clinicVaccines ClinicVaccine[]
+}
+
+model ClinicVaccine {
+  id             String   @id @default(uuid())
+  clinicId       String
+  vaccineTypeId  String
+  productBatchId String
+  price          Decimal
+  quantity       Int
+  expirationDate DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  active         Boolean  @default(true)
+
+  clinic        Company      @relation(fields: [clinicId], references: [id])
+  vaccineType   VaccineType  @relation(fields: [vaccineTypeId], references: [id])
+  productBatch  ProductBatch @relation(fields: [productBatchId], references: [id])
+  vaccinations  Vaccination[]
+
+  @@unique([clinicId, vaccineTypeId, productBatchId])
+  @@index([clinicId])
+  @@index([vaccineTypeId])
+}
+
+model Vaccination {
+  id              String   @id @default(uuid())
+  petId           String
+  companyId       String
+  clinicVaccineId String
+  applicationDate DateTime
+  nextDoseDate    DateTime?
+  doseNumber      Int       @default(1)
+  adverseReaction String?
+  observations    String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  pet           Pet          @relation(fields: [petId], references: [id])
+  company       Company      @relation(fields: [companyId], references: [id])
+  clinicVaccine ClinicVaccine @relation(fields: [clinicVaccineId], references: [id])
+
+  @@index([petId])
+  @@index([companyId])
+  @@index([applicationDate])
+  @@index([nextDoseDate])
+}
+
+//////////////////////////////////////////////////////////
+// CONSULTAS, INTERNAÇÕES, EXAMES, MEDICAÇÕES
+//////////////////////////////////////////////////////////
+
+model Appointment {
+  id              String   @id @default(uuid())
+  petId           String
+  companyId       String
+  paymentOrderId  String?
+  status          AppointmentStatusEnum @default(PENDING)
+  type            String?
+  scheduledAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  pet          Pet          @relation(fields: [petId], references: [id])
+  company      Company      @relation(fields: [companyId], references: [id])
+  paymentOrder PaymentOrder? @relation(fields: [paymentOrderId], references: [id])
+  medications  Medication[]
+
+  @@index([petId])
+  @@index([companyId])
+  @@index([status])
+  @@index([scheduledAt])
+}
+
+model Internation {
+  id              String   @id @default(uuid())
+  companyId       String
+  petId           String
+  paymentOrderId  String?
+  responsibleVetId String?
+  room            String?
+  status          InternationStatusEnum @default(IN_PROGRESS)
+  startDate       DateTime
+  endDate         DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  company         Company            @relation(fields: [companyId], references: [id])
+  pet             Pet                @relation(fields: [petId], references: [id])
+  paymentOrder    PaymentOrder?      @relation(fields: [paymentOrderId], references: [id])
+  responsibleVet  UserProfileEmployee? @relation(fields: [responsibleVetId], references: [id])
+  medications     Medication[]
+
+  @@index([petId])
+  @@index([companyId])
+  @@index([status])
+  @@index([startDate])
+}
+
+model Medication {
+  id                String   @id @default(uuid())
+  petId             String
+  appointmentId     String?
+  internationId     String?
+  prescribedByVetId String?
+  productBatchId    String
+  dosage            String?
+  dosageUnit        String?
+  frequency         String?
+  administrationRoute String?
+  startDate         DateTime
+  endDate           DateTime?
+  lastDosage        DateTime?
+  notes             String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  pet             Pet                @relation(fields: [petId], references: [id])
+  appointment     Appointment?       @relation(fields: [appointmentId], references: [id])
+  internation     Internation?       @relation(fields: [internationId], references: [id])
+  prescribedByVet UserProfileEmployee? @relation(fields: [prescribedByVetId], references: [id])
+  productBatch    ProductBatch       @relation(fields: [productBatchId], references: [id])
+
+  @@index([petId])
+  @@index([appointmentId])
+  @@index([internationId])
+  @@index([startDate, endDate])
+}
+
+//////////////////////////////////////////////////////////
+// PAGAMENTOS
+//////////////////////////////////////////////////////////
+
+model PaymentOrder {
+  id          String   @id @default(uuid())
+  companyId   String
+  amount      Decimal
+  status      PaymentStatus
+  originType  PaymentOriginEnum
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id])
+  items   PaymentItem[]
+  appointments Appointment[]
+  internations Internation[]
+
+  @@index([companyId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model PaymentItem {
+  id              String   @id @default(uuid())
+  paymentOrderId  String
+  productBatchId  String?
+  price           Decimal
+  quantity        Int
+  createdAt       DateTime @default(now())
+
+  paymentOrder PaymentOrder @relation(fields: [paymentOrderId], references: [id])
+  productBatch ProductBatch? @relation(fields: [productBatchId], references: [id])
+
+  @@index([paymentOrderId])
+  @@index([productBatchId])
+}
+
+//////////////////////////////////////////////////////////
+// EXAMES E RESULTADOS
+//////////////////////////////////////////////////////////
+
+model Exam {
+  id                  String   @id @default(uuid())
+  petId               String
+  requestedByVetId    String?
+  requestedByCompanyId String?
+  appointmentId       String?
+  internationId       String?
+  paymentOrderId      String?
+  name                String
+  examDate            DateTime
+  clinicId            String
+  comments            String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  pet          Pet              @relation(fields: [petId], references: [id])
+  clinic       Company          @relation(fields: [clinicId], references: [id])
+  resultExams  ResultExam[]
+
+  @@index([petId])
+  @@index([clinicId])
+  @@index([examDate])
+  @@index([requestedByVetId])
+  @@index([requestedByCompanyId])
+}
+
+model ResultExam {
+  id                String   @id @default(uuid())
+  examId            String
+  issuedByVetId     String?
+  issuedByCompanyId String?
+  clinicId          String
+  fileUrl           String
+  comments          String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  exam   Exam     @relation(fields: [examId], references: [id])
+  clinic Company  @relation(fields: [clinicId], references: [id])
+
+  @@index([examId])
+  @@index([clinicId])
+  @@index([createdAt])
 }

@@ -1,50 +1,43 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/commom/prisma/prisma.service';
+import { EstadoEnum } from '../commom/enum/estado.enum';
+import { ErrorResponse } from '../commom/response/errorResponse';
 
 @Injectable()
 export class AddressService {
-  constructor(private readonly prisma:PrismaService){}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createAddressDto: CreateAddressDto) {
     try {
-      return await this.prisma.address.create({data:createAddressDto})
-    } catch {
-      throw new Error("Erro ao cadastrar endereço")
-    }
-  }
-
-  async findOne(id: string) {
-    try {
-      return await this.prisma.address.findFirst({
-        where:{id:id}
-      })
-    } catch {
-      throw new Error("Erro ao buscar endereço")
+      const state = EstadoEnum[createAddressDto.state];
+      return await this.prisma.address.create({
+        data: {
+          ...createAddressDto,
+          state,
+        },
+      });
+    } catch (error) {
+      throw new ErrorResponse({
+        message: 'Erro ao cadastrar endereço',
+        details: error.meta,
+        statusCode: 400,
+        errorsCode: error.code,
+      });
     }
   }
   async update(id: string, updateAddressDto: UpdateAddressDto) {
     try {
-      return await this.prisma.address.update({
-        where:{
-          id:id
-        },
-        data:updateAddressDto})
+      return true;
+      // return await this.prisma.address.update({
+      // where: {
+      // id: id
+      // },
+      // data: updateAddressDto
+      // })
     } catch {
-      throw new Error("Erro ao atualizar endereço")
-    }  
-  }
-
-  async remove(id: string) {
-    try {
-      return await this.prisma.address.delete({
-        where:{
-          id:id
-        }}
-      )
-    } catch {
-      throw new Error("Erro ao deletar endereço")
-    }    
+      throw new Error('Erro ao atualizar endereço');
+    }
   }
 }

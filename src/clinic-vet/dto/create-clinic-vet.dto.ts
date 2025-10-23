@@ -8,36 +8,37 @@ import {
   Length,
   MaxLength,
   Matches,
+  IsNotEmpty,
+  MinLength,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateClinicVetDto {
   @IsString()
+  @IsNotEmpty({ message: 'O nome é obrigatório.' })
+  name: string;
+
+  @IsEmail({}, { message: 'E-mail inválido.' })
+  @IsNotEmpty({ message: 'O e-mail é obrigatório.' })
+  email: string;
+
+  @IsString()
+  @MinLength(6, { message: 'A senha deve ter no mínimo 6 caracteres.' })
+  @IsNotEmpty({ message: 'A senha é obrigatória.' })
+  password: string;
+
+  @IsString()
   @Length(14, 14, { message: 'CNPJ deve ter 14 caracteres' })
-  socialNumber: string;
+  cnpj: string;
 
   @IsString()
   @MaxLength(255)
   socialName: string;
 
-  @IsOptional()
   @IsString()
   @MaxLength(255)
-  tradeName?: string;
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(20)
-  stateRegistration?: string;
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(20)
-  municipalRegistration?: string;
-
-  @IsEmail()
-  @MaxLength(255)
-  email: string;
+  @IsNotEmpty({ message: 'Nome fantasia é obrigatório.' })
+  tradeName: string;
 
   @IsOptional()
   @IsString()
@@ -48,16 +49,6 @@ export class CreateClinicVetDto {
   @IsString()
   @MaxLength(15)
   cellphone?: string;
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(20)
-  crmv?: string;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  crmvState?: number;
 
   @IsOptional()
   @IsString()
@@ -85,7 +76,6 @@ export class CreateClinicVetDto {
   })
   closingTime?: string;
 
-  @IsOptional()
   @Type(() => Boolean)
   @IsBoolean()
   emergencyService?: boolean;
@@ -94,12 +84,11 @@ export class CreateClinicVetDto {
   @IsString()
   observations?: string;
 
-  @IsOptional()
   @Type(() => Boolean)
   @IsBoolean()
   active?: boolean;
 
-  // @IsUUID()
-  // @IsOptional()
-  // addressId?: string;
+  @IsUUID()
+  @IsOptional()
+  addressId?: string;
 }

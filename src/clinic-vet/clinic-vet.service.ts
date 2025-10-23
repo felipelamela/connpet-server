@@ -1,35 +1,52 @@
 import { Injectable } from '@nestjs/common';
 import { CreateClinicVetDto } from './dto/create-clinic-vet.dto';
-import { UpdateClinicVetDto } from './dto/update-clinic-vet.dto';
 import { ClinicVetHandlers } from './clinic-vet.handlers';
+import { UserEntity } from '../user/entities/user.entity';
+import { ClinicVetEntity } from './entities/clinic-vet.entity';
+import { ErrorResponse } from '../commom/response/errorResponse';
+import { User, Company } from '@prisma/client';
+import { CreateUserProfileDto } from './dto/create-user-profile.dto';
+import { generateRandomPassword } from '../commom/system/generateRandomPassword';
 
 @Injectable()
 export class ClinicVetService {
-  constructor(private readonly clinicVetHandlers: ClinicVetHandlers){}
-  
-  
-  async create(createClinicVetDto: CreateClinicVetDto) {
+  constructor(private readonly clinicVetHandlers: ClinicVetHandlers) {}
+  async create(
+    createClinicVetDto: CreateClinicVetDto,
+  ): Promise<{ user: User; clinic: Company }> {
     try {
-      const createdClinic = await this.clinicVetHandlers.createClinic(createClinicVetDto)
-      return createdClinic  
+      const userEntity = new UserEntity({
+        ...createClinicVetDto,
+        status: true,
+      });
+      const clinicEntity = new ClinicVetEntity(createClinicVetDto);
+      await this.clinicVetHandlers.validateCreateClinic({
+        userEmail: userEntity.email,
+        cnpj: clinicEntity.cnpj,
+      });
+      const createdClinic = await this.clinicVetHandlers.createClinic({
+        createClinic: clinicEntity,
+        user: userEntity,
+      });
+      return createdClinic;
     } catch (error) {
-      throw new Error(error.message)
-    };
+      throw new ErrorResponse(error);
+    }
   }
-
-  findAll() {
-    return `This action returns all clinicVet`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} clinicVet`;
-  }
-
-  update(id: number, updateClinicVetDto: UpdateClinicVetDto) {
-    return `This action updates a #${id} clinicVet`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} clinicVet`;
+  async createUserProfile(createUserProfileDto: CreateUserProfileDto) {
+    try {
+      const password = generateRandomPassword();
+      const userEntity = new UserEntity({
+        ...createUserProfileDto,
+        password,
+        status: true,
+      });
+      await this.clinicVetHandlers.createUserProfile({
+        user: userEntity,
+        companyId: createUserProfileDto.companyId,
+      });
+    } catch (error) {
+      throw new ErrorResponse(error);
+    }
   }
 }

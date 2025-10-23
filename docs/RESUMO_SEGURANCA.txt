@@ -1,0 +1,152 @@
+╔══════════════════════════════════════════════════════════════╗
+║           🛡️  PROTEÇÃO CONTRA DDoS IMPLEMENTADA! 🛡️          ║
+╚══════════════════════════════════════════════════════════════╝
+
+✅ TODAS AS PROTEÇÕES SEGUEM O PADRÃO ErrorResponse DO PROJETO!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 CÓDIGOS DE ERRO ADICIONADOS:
+
+   E-0007  RATE_LIMIT_EXCEEDED     (429) Rate limit excedido
+   E-0008  IP_BLOCKED              (403) IP bloqueado
+   E-0009  BRUTE_FORCE_DETECTED    (429) Força bruta detectada
+   E-0010  ACCOUNT_LOCKED          (429) Conta bloqueada
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🛡️  PROTEÇÕES IMPLEMENTADAS:
+
+1. ✅ Rate Limiting Global
+   └─ 100 requisições/minuto
+   └─ Resposta: ErrorResponse com E-0007
+
+2. ✅ Proteção Força Bruta
+   └─ 5 tentativas de login
+   └─ Bloqueio: 30 minutos
+   └─ Resposta: ErrorResponse com E-0010
+
+3. ✅ IP Blacklist/Whitelist
+   └─ Bloqueio permanente de IPs
+   └─ Resposta: ErrorResponse com E-0008
+
+4. ✅ Helmet Security Headers
+   └─ CSP, XSS, Clickjacking
+
+5. ✅ Body Limit
+   └─ Máximo 1MB
+
+6. ✅ CORS Configurado
+   └─ Apenas origens permitidas
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📝 EXEMPLO DE USO NO AUTHCONTROLLER:
+
+import { ErrorResponse } from '../commom/response/errorResponse';
+import { ErrorEnum } from '../commom/enum/error.enum';
+import { ThrottleStrict } from '../commom/decorators/throttle.decorator';
+import { BruteForceGuard } from '../commom/guards/brute-force.guard';
+
+@Controller('auth')
+export class AuthController {
+  constructor(
+    private authService: AuthService,
+    private bruteForceGuard: BruteForceGuard,
+  ) {}
+
+  @Post('login')
+  @Public()
+  @ThrottleStrict() // 5 req/min
+  @UseGuards(BruteForceGuard)
+  async login(@Body() loginDto: LoginAuthDto, @Req() req) {
+    const ip = this.getClientIp(req);
+
+    try {
+      const result = await this.authService.login(loginDto);
+      this.bruteForceGuard.clearAttempts(ip, loginDto.email);
+      return result;
+    } catch (error) {
+      this.bruteForceGuard.registerSuspiciousActivity(ip);
+      throw new ErrorResponse(error);
+    }
+  }
+
+  private getClientIp(req: any): string {
+    return req.headers['x-forwarded-for']?.split(',')[0] || 
+           req.headers['x-real-ip'] || 
+           req.ip || 
+           'unknown';
+  }
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📱 TRATAMENTO NO FRONTEND:
+
+// React Native / Next.js
+try {
+  await api.post('/auth/login', data);
+} catch (error) {
+  const errCode = error.response?.data?.errorsCode;
+  const message = error.response?.data?.message;
+
+  switch (errCode) {
+    case 'E-0007': // Rate limit
+      Alert.alert('Aguarde', message);
+      break;
+    case 'E-0010': // Conta bloqueada
+      Alert.alert('Bloqueado', message);
+      break;
+    case 'E-0008': // IP bloqueado
+      Alert.alert('Acesso Negado', message);
+      break;
+    default:
+      Alert.alert('Erro', message);
+  }
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 RESPOSTA DE ERRO PADRONIZADA:
+
+{
+  "success": false,              ← Sempre false em erro
+  "statusCode": 429,             ← HTTP status code
+  "message": "Mensagem amigável", ← Para mostrar ao usuário
+  "errorsCode": "E-0007",        ← Código único do erro
+  "details": {                   ← Informações adicionais
+    "ip": "192.168.***",
+    "timestamp": "2025-10-17...",
+    "remainingMinutes": 15
+  }
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 DOCUMENTAÇÃO COMPLETA:
+
+✅ SEGURANCA_DDOS.md              - Guia técnico completo
+✅ GUIA_IMPLEMENTACAO_SEGURANCA.md - Como implementar
+✅ PADROES_ERROR_SECURITY.md      - Padrões de erro
+✅ PROTECAO_ATIVADA.md            - Resumo executivo
+✅ auth.controller.example.ts     - Exemplo pronto para usar
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 PRÓXIMO PASSO:
+
+1. Reiniciar servidor: npm run start:dev
+
+2. Aplicar no AuthController real (copiar do example)
+
+3. Testar no Postman/curl
+
+4. Tratar erros no frontend usando errorsCode
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ PADRÃO ErrorResponse SEGUIDO EM TODOS OS ARQUIVOS!
+
+🎉 Proteção DDoS implementada com sucesso! 🛡️
+
