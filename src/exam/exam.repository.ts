@@ -15,12 +15,11 @@ export class ExamRepository {
           requestedByVetId: data.requestedByVetId,
           name: data.name,
           examDate: data.examDate,
-          clinicId: data.clinicId,
+          clinicId: data.clinicId!,
           comments: data.comments,
         },
         include: {
           pet: true,
-          requestedBy: true,
           clinic: true,
         },
       });
@@ -39,9 +38,8 @@ export class ExamRepository {
       return await this.prisma.exam.findMany({
         include: {
           pet: true,
-          requestedBy: true,
           clinic: true,
-          ResultExam: true,
+          resultExams: true,
         },
       });
     } catch (error) {
@@ -60,9 +58,8 @@ export class ExamRepository {
         where: { id },
         include: {
           pet: true,
-          requestedBy: true,
           clinic: true,
-          ResultExam: true,
+          resultExams: true,
         },
       });
     } catch (error) {
@@ -81,9 +78,8 @@ export class ExamRepository {
         where: { petId },
         include: {
           pet: true,
-          requestedBy: true,
           clinic: true,
-          ResultExam: true,
+          resultExams: true,
         },
         orderBy: {
           examDate: 'desc',
@@ -105,9 +101,8 @@ export class ExamRepository {
         where: { clinicId },
         include: {
           pet: true,
-          requestedBy: true,
           clinic: true,
-          ResultExam: true,
+          resultExams: true,
         },
         orderBy: {
           examDate: 'desc',
@@ -136,9 +131,8 @@ export class ExamRepository {
         },
         include: {
           pet: true,
-          requestedBy: true,
           clinic: true,
-          ResultExam: true,
+          resultExams: true,
         },
       });
     } catch (error) {

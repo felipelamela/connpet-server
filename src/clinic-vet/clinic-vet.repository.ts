@@ -10,7 +10,7 @@ export class clinicVetRepository {
 
   async createClinic(create: ClinicVetEntity) {
     try {
-      return await this.prisma.veterinaryClinic.create({
+      return await this.prisma.company.create({
         data: create,
       });
     } catch (error) {
@@ -46,7 +46,7 @@ export class clinicVetRepository {
   }
   async findClinicByCNPJ(cnpj: string) {
     try {
-      return await this.prisma.veterinaryClinic.findFirst({
+      return await this.prisma.company.findFirst({
         where: {
           cnpj: cnpj,
         },

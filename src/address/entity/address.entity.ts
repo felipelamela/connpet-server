@@ -1,3 +1,5 @@
+import { StateEnum } from '@prisma/client';
+
 export interface IAddress {
   cep: string;
   street: string;
@@ -5,7 +7,7 @@ export interface IAddress {
   complement?: string;
   neighborhood: string;
   city: string;
-  state: number;
+  state: StateEnum;
   country?: string;
 }
 
@@ -16,7 +18,7 @@ export default class AddressEntity {
   complement: string;
   neighborhood: string;
   city: string;
-  state: number;
+  state: StateEnum;
   country: string;
   constructor(address: IAddress) {
     this.cep = address.cep;

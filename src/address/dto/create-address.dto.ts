@@ -2,10 +2,11 @@ import {
   IsString,
   IsNotEmpty,
   IsOptional,
-  IsInt,
   Length,
   MaxLength,
+  IsEnum,
 } from 'class-validator';
+import { StateEnum } from '@prisma/client';
 
 export class CreateAddressDto {
   @IsString()
@@ -42,9 +43,9 @@ export class CreateAddressDto {
   @MaxLength(100, { message: 'A cidade pode ter no máximo 100 caracteres.' })
   city: string;
 
-  @IsInt({ message: 'O estado deve ser um número inteiro.' })
+  @IsEnum(StateEnum, { message: 'O estado deve ser um estado válido do Brasil.' })
   @IsNotEmpty({ message: 'O estado é obrigatório.' })
-  state: number;
+  state: StateEnum;
 
   @IsOptional()
   @IsString()

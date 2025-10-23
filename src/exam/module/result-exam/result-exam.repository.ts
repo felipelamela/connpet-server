@@ -12,14 +12,13 @@ export class ResultExamRepository {
       return await this.prisma.resultExam.create({
         data: {
           examId: data.examId,
-          IssuedByVetId: data.IssuedByVetId,
-          clinicId: data.clinicId,
+          issuedByVetId: data.IssuedByVetId,
+          clinicId: data.clinicId!,
           fileUrl: data.fileUrl,
           comments: data.comments,
         },
         include: {
           exam: true,
-          IssuedBy: true,
           clinic: true,
         },
       });
@@ -38,7 +37,6 @@ export class ResultExamRepository {
       return await this.prisma.resultExam.findMany({
         include: {
           exam: true,
-          IssuedBy: true,
           clinic: true,
         },
       });
@@ -58,7 +56,6 @@ export class ResultExamRepository {
         where: { id },
         include: {
           exam: true,
-          IssuedBy: true,
           clinic: true,
         },
       });
@@ -78,7 +75,6 @@ export class ResultExamRepository {
         where: { examId },
         include: {
           exam: true,
-          IssuedBy: true,
           clinic: true,
         },
         orderBy: {
@@ -101,7 +97,6 @@ export class ResultExamRepository {
         where: { clinicId },
         include: {
           exam: true,
-          IssuedBy: true,
           clinic: true,
         },
         orderBy: {
@@ -123,14 +118,13 @@ export class ResultExamRepository {
       return await this.prisma.resultExam.update({
         where: { id },
         data: {
-          IssuedByVetId: data.IssuedByVetId,
-          clinicId: data.clinicId,
+          issuedByVetId: data.IssuedByVetId,
+          clinicId: data.clinicId!,
           fileUrl: data.fileUrl,
           comments: data.comments,
         },
         include: {
           exam: true,
-          IssuedBy: true,
           clinic: true,
         },
       });

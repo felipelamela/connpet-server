@@ -3,11 +3,9 @@ import {
   IsString,
   IsNotEmpty,
   IsUUID,
-  IsInt,
   IsOptional,
-  IsDateString,
-  IsNumber,
   IsEnum,
+  IsBoolean,
 } from 'class-validator';
 
 export class CreateProductDto {
@@ -15,19 +13,17 @@ export class CreateProductDto {
   @IsNotEmpty()
   name: string;
 
-  @IsInt()
-  quantity: number;
-
-  @IsDateString()
+  @IsString()
   @IsOptional()
-  validatedAt?: string; // ou Date, dependendo de como você envia no body
-
-  @IsNumber()
-  price: number;
+  description?: string;
 
   @IsEnum(ProductType)
   type: ProductType;
 
   @IsUUID()
-  clinicId: string;
+  companyId: string;
+
+  @IsBoolean()
+  @IsOptional()
+  active?: boolean;
 }

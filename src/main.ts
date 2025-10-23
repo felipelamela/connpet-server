@@ -5,11 +5,12 @@ import {
 } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
-import { MetricsInterceptor } from './commom/interceptors/metrics.interceptor';
 import { ResponseInterceptor } from './commom/interceptors/response.interceptor';
+import { AllExceptionsFilter } from './commom/filters/all-exceptions.filter';
 import pinoHttp from 'pino-http';
 import logger from './commom/logger/logger';
 import helmet from '@fastify/helmet';
+import fastifyCookie from '@fastify/cookie';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -20,6 +21,11 @@ async function bootstrap() {
       bodyLimit: 1048576, // Limite de 1MB para body (proteção contra payload gigante)
     }),
   );
+
+  // Registrar plugin de cookies
+  await app.register(fastifyCookie as any, {
+    secret: process.env.COOKIE_SECRET || 'connpet-cookie-secret-key-change-in-production',
+  });
 
   // Helmet para segurança de headers HTTP
   await app.register(helmet as any, {
@@ -40,7 +46,10 @@ async function bootstrap() {
     credentials: true,
     maxAge: 3600, // Cache de preflight
   });
-  app.useGlobalInterceptors(new MetricsInterceptor());
+
+  // Filtros e Interceptors Globais
+  app.useGlobalFilters(new AllExceptionsFilter()); // Captura todos os erros não tratados
+  // MetricsInterceptor está registrado como APP_INTERCEPTOR no app.module
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalPipes(
     new ValidationPipe({
@@ -74,7 +83,8 @@ async function bootstrap() {
 ║     ✅ Rate Limiting (100 req/min)                         ║
 ║     ✅ Brute Force Protection (5 tentativas)               ║
 ║     ✅ Helmet Security Headers                             ║
-║     ✅ CORS Configurado                                    ║
+║     ✅ CORS Configurado (credentials: true)                ║
+║     ✅ Cookies HttpOnly + Secure + SameSite                ║
 ║     ✅ Body Limit (1MB)                                    ║
 ║     ✅ IP Tracking                                         ║
 ╚════════════════════════════════════════════════════════════╝

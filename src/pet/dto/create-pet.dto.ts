@@ -8,7 +8,9 @@ import {
   IsNumber,
   IsBoolean,
   MaxLength,
+  IsEnum,
 } from 'class-validator';
+import { SpeciesEnum, GenderEnum } from '@prisma/client';
 
 export class CreatePetDto {
   @IsString()
@@ -16,10 +18,9 @@ export class CreatePetDto {
   @MaxLength(100)
   name: string;
 
-  @IsString()
+  @IsEnum(SpeciesEnum)
   @IsNotEmpty()
-  @MaxLength(50)
-  species: string;
+  species: SpeciesEnum;
 
   @IsInt()
   breed: number;
@@ -54,6 +55,7 @@ export class CreatePetDto {
   @IsNotEmpty()
   tutorId: string;
 
+  @IsEnum(GenderEnum)
   @IsNotEmpty()
-  gender: number;
+  gender: GenderEnum;
 }

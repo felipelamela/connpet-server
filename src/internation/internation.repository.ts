@@ -13,14 +13,14 @@ export class InternationRepository {
         data: {
           petId: data.petId,
           companyId: data.companyId,
-          vetId: data.vetId,
+          responsibleVetId: data.vetId,
           startDate: data.startDate,
           endDate: data.endDate,
         },
         include: {
           pet: true,
-          veterinaryClinic: true,
-          veterinarianProfile: true,
+          company: true,
+          responsibleVet: true,
         },
       });
     } catch (error) {
@@ -38,18 +38,8 @@ export class InternationRepository {
       return await this.prisma.internation.findMany({
         include: {
           pet: true,
-          veterinaryClinic: true,
-          veterinarianProfile: true,
-          InternationService: {
-            include: {
-              service: true,
-            },
-          },
-          InternationProduct: {
-            include: {
-              product: true,
-            },
-          },
+          company: true,
+          responsibleVet: true,
         },
         orderBy: {
           startDate: 'desc',
@@ -71,18 +61,8 @@ export class InternationRepository {
         where: { id },
         include: {
           pet: true,
-          veterinaryClinic: true,
-          veterinarianProfile: true,
-          InternationService: {
-            include: {
-              service: true,
-            },
-          },
-          InternationProduct: {
-            include: {
-              product: true,
-            },
-          },
+          company: true,
+          responsibleVet: true,
         },
       });
     } catch (error) {
@@ -101,18 +81,8 @@ export class InternationRepository {
         where: { petId },
         include: {
           pet: true,
-          veterinaryClinic: true,
-          veterinarianProfile: true,
-          InternationService: {
-            include: {
-              service: true,
-            },
-          },
-          InternationProduct: {
-            include: {
-              product: true,
-            },
-          },
+          company: true,
+          responsibleVet: true,
         },
         orderBy: {
           startDate: 'desc',
@@ -134,18 +104,8 @@ export class InternationRepository {
         where: { companyId: clinicId },
         include: {
           pet: true,
-          veterinaryClinic: true,
-          veterinarianProfile: true,
-          InternationService: {
-            include: {
-              service: true,
-            },
-          },
-          InternationProduct: {
-            include: {
-              product: true,
-            },
-          },
+          company: true,
+          responsibleVet: true,
         },
         orderBy: {
           startDate: 'desc',
@@ -169,18 +129,8 @@ export class InternationRepository {
         },
         include: {
           pet: true,
-          veterinaryClinic: true,
-          veterinarianProfile: true,
-          InternationService: {
-            include: {
-              service: true,
-            },
-          },
-          InternationProduct: {
-            include: {
-              product: true,
-            },
-          },
+          company: true,
+          responsibleVet: true,
         },
         orderBy: {
           startDate: 'desc',
@@ -201,24 +151,14 @@ export class InternationRepository {
       return await this.prisma.internation.update({
         where: { id },
         data: {
-          vetId: data.vetId,
+          responsibleVetId: data.vetId,
           startDate: data.startDate,
           endDate: data.endDate,
         },
         include: {
           pet: true,
-          veterinaryClinic: true,
-          veterinarianProfile: true,
-          InternationService: {
-            include: {
-              service: true,
-            },
-          },
-          InternationProduct: {
-            include: {
-              product: true,
-            },
-          },
+          company: true,
+          responsibleVet: true,
         },
       });
     } catch (error) {

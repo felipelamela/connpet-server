@@ -9,7 +9,9 @@ import {
   IsNumber,
   IsDateString,
   Length,
+  IsEnum,
 } from 'class-validator';
+import { StateEnum, SpeciesEnum, GenderEnum } from '@prisma/client';
 
 export class CreateTutorWithPetDto {
   @IsString()
@@ -62,9 +64,9 @@ export class CreateTutorWithPetDto {
   @MaxLength(100, { message: 'A cidade pode ter no máximo 100 caracteres.' })
   city: string;
 
-  @IsNumber()
+  @IsEnum(StateEnum, { message: 'O estado deve ser um estado válido do Brasil.' })
   @IsNotEmpty({ message: 'O estado é obrigatório.' })
-  state: number;
+  state: StateEnum;
 
   @IsOptional()
   @IsString()
@@ -76,10 +78,9 @@ export class CreateTutorWithPetDto {
   @MaxLength(100)
   namePet: string;
 
-  @IsString()
+  @IsEnum(SpeciesEnum)
   @IsNotEmpty()
-  @MaxLength(50)
-  species: string;
+  species: SpeciesEnum;
 
   @IsNumber()
   breed: number;
@@ -114,6 +115,7 @@ export class CreateTutorWithPetDto {
   @IsNotEmpty()
   tutorId: string;
 
+  @IsEnum(GenderEnum)
   @IsNotEmpty()
-  gender: number;
+  gender: GenderEnum;
 }

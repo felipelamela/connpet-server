@@ -35,10 +35,10 @@ export class CreateClinicVetDto {
   @MaxLength(255)
   socialName: string;
 
-  @IsOptional()
   @IsString()
   @MaxLength(255)
-  tradeName?: string;
+  @IsNotEmpty({ message: 'Nome fantasia é obrigatório.' })
+  tradeName: string;
 
   @IsOptional()
   @IsString()

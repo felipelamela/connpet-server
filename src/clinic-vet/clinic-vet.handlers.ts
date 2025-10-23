@@ -7,7 +7,7 @@ import {
   RoleEnum,
   User,
   UserProfileEmployee,
-  VeterinaryClinic,
+  Company,
 } from '@prisma/client';
 import { ErrorResponse } from '../commom/response/errorResponse';
 import { ErrorEnum } from '../commom/enum/error.enum';
@@ -22,7 +22,7 @@ export class ClinicVetHandlers {
   async createClinic(data: {
     createClinic: ClinicVetEntity;
     user: UserEntity;
-  }): Promise<{ user: User; clinic: VeterinaryClinic }> {
+  }): Promise<{ user: User; clinic: Company }> {
     try {
       const [userId, clinicId] = await Promise.all([
         this.userService.create(data.user),

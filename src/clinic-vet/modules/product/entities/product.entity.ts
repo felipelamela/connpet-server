@@ -3,30 +3,28 @@ import { ProductType } from '@prisma/client';
 export interface IProduct {
   id?: string;
   name: string;
-  quantity: number;
-  validatedAt?: Date | null;
-  price: number;
+  description?: string;
   type: ProductType;
-  clinicId: string;
+  companyId: string;
+  active?: boolean;
 }
 
 export class ProductEntity {
   id?: string;
   name: string;
-  quantity: number;
-  validatedAt: Date | null;
-  price: number;
+  description?: string;
   type: ProductType;
-  clinicId: string;
+  companyId: string;
+  active: boolean;
   createdAt?: Date;
+  updatedAt?: Date;
 
   constructor(product: IProduct) {
     this.id = product.id;
     this.name = product.name;
-    this.quantity = product.quantity;
-    this.validatedAt = product.validatedAt ?? null;
-    this.price = product.price;
+    this.description = product.description;
     this.type = product.type;
-    this.clinicId = product.clinicId;
+    this.companyId = product.companyId;
+    this.active = product.active ?? true;
   }
 }

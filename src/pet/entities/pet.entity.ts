@@ -1,8 +1,8 @@
-import { GenderEnum } from '@prisma/client';
+import { GenderEnum, SpeciesEnum } from '@prisma/client';
 
 export interface IPet {
   name: string;
-  species: string;
+  species: SpeciesEnum;
   breed: number;
   birthDate?: Date | null;
   color?: string | null;
@@ -11,12 +11,12 @@ export interface IPet {
   observations?: string | null;
   active?: boolean;
   tutorId: string;
-  gender: number;
+  gender: GenderEnum;
 }
 
 export class PetEntity {
   name: string;
-  species: string;
+  species: SpeciesEnum;
   breed: number;
   birthDate: Date | null;
   color: string | null;
@@ -38,6 +38,6 @@ export class PetEntity {
     this.observations = pet.observations ?? null;
     this.active = pet.active ?? true;
     this.tutorId = pet.tutorId;
-    this.gender = pet.gender == 1 ? 'MALE' : 'FEMALE';
+    this.gender = pet.gender;
   }
 }

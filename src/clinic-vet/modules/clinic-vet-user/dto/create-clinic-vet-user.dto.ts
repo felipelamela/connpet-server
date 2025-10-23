@@ -3,11 +3,11 @@ import {
   IsOptional,
   IsEmail,
   Length,
-  Matches,
-  IsNumber,
   IsNotEmpty,
   IsUUID,
+  IsEnum,
 } from 'class-validator';
+import { RoleEnum } from '@prisma/client';
 
 export class CreateClinicVetUserDto {
   @IsString()
@@ -16,9 +16,9 @@ export class CreateClinicVetUserDto {
   @IsEmail()
   email: string;
 
-  @IsNumber()
+  @IsEnum(RoleEnum)
   @IsNotEmpty()
-  roles: number;
+  roles: RoleEnum;
 
   @IsUUID()
   @IsNotEmpty()

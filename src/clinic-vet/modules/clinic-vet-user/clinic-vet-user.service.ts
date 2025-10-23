@@ -25,8 +25,7 @@ export class ClinicVetUserService {
     const userProfile = new UserProfileEmployeeEntity({
       ...createClinicVetUserDto,
       userId: userId.id,
-
-      roles: RoleEnum[createClinicVetUserDto.roles],
+      roles: createClinicVetUserDto.roles,
     });
 
     return userProfile;
