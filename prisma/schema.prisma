@@ -82,18 +82,13 @@ enum ProductType {
   ACCESSORY
 }
 
-enum SpeciesEnum {
-  DOG
-  CAT
-  BIRD
-  RABBIT
-  HAMSTER
-  GUINEA_PIG
-  FERRET
-  REPTILE
-  FISH
-  OTHER
-}
+// enum UsedInEnum {
+//   CLINIC
+//   PETSHOP
+//   GROOMING
+//   HOSTING
+//   INTERNAL
+// }
 
 enum PanelTypeEnum {
   CLINIC
@@ -105,6 +100,17 @@ enum InternationStatusEnum {
   IN_PROGRESS
   DISCHARGED
   CANCELLED
+}
+
+enum ServiceCategoryEnum {
+  CONSULTATION
+  EXAM
+  VACCINE
+  SURGERY
+  HOSPITALIZATION
+  BATH_GROOMING
+  PETSHOP
+  OTHER
 }
 
 //////////////////////////////////////////////////////////
@@ -140,17 +146,14 @@ model Company {
   address     Address? @relation(fields: [addressId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  deletedAt   DateTime?
 
   panels      Panel[]
   products    Product[]
   employees   UserProfileEmployee[]
   vaccinations Vaccination[]
-  paymentOrders PaymentOrder[]
   internations Internation[]
   exams       Exam[]
   resultExams ResultExam[]
-  appointments Appointment[]
   clinicVaccines ClinicVaccine[]
 
   @@index([cnpj])
@@ -195,6 +198,9 @@ model UserProfileEmployee {
   @@index([companyId])
   @@index([roles])
   @@index([crmv])
+  Appointment Appointment[]
+  notesAppointments notesAppointment[]
+  notesGroomings notesGrooming[]
 }
 
 model UserProfileTutor {
@@ -209,32 +215,56 @@ model UserProfileTutor {
   address  Address? @relation(fields: [addressId], references: [id])
   pets     Pet[]
   notes    NotesPet[]
+  tutorCompanies TutorCompany[]
 
   @@index([userId])
   @@index([document])
-  @@index([phone])
+  Selling Selling[]
+  HostingPet HostingPet[]
 }
 
-//////////////////////////////////////////////////////////
-// PETS E PERFIS
-//////////////////////////////////////////////////////////
+model PetCompany{
+  id        String @id @default(uuid())
+  petId     String
+  panelId   String
+  createdAt DateTime @default(now())
+
+  pet   Pet @relation(fields: [petId], references: [id])
+  panel Panel @relation(fields: [panelId], references: [id])
+  
+  @@index([petId])
+  @@index([panelId])
+}
+
+model TutorCompany{
+  id        String @id @default(uuid())
+  tutorId     String
+  panelId   String
+  createdAt DateTime @default(now())
+
+  tutor   UserProfileTutor @relation(fields: [tutorId], references: [id])
+  panel   Panel           @relation(fields: [panelId], references: [id])
+  
+  @@index([tutorId])
+  @@index([panelId])
+}
 
 model Pet {
   id              String       @id @default(uuid())
   tutorId         String
   name            String
-  species         SpeciesEnum
+  species         Int
   breed           Int
   birthDate       DateTime?
   color           String?
-  weight          Decimal?
+  weight          Decimal?    @db.Decimal(10, 3)
   microchipNumber String?      @unique
   observations    String?
   gender          GenderEnum
   active          Boolean      @default(true)
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
-  deletedAt       DateTime?
+
 
   tutor           UserProfileTutor @relation(fields: [tutorId], references: [id])
   vaccinations    Vaccination[]
@@ -243,12 +273,13 @@ model Pet {
   medications     Medication[]
   exams           Exam[]
   notes           NotesPet[]
-
+  petCompanies PetCompany[]
+  
   @@index([tutorId])
   @@index([active])
   @@index([name])
-  @@index([createdAt])
-  @@index([tutorId, createdAt])
+  Grooming Grooming[]
+  HostingPet HostingPet[]
 }
 
 model NotesPet {
@@ -259,7 +290,6 @@ model NotesPet {
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  deletedAt   DateTime?
 
   tutor UserProfileTutor @relation(fields: [tutorId], references: [id])
   pet   Pet              @relation(fields: [petId], references: [id])
@@ -277,48 +307,59 @@ model Plan {
   id          String   @id @default(uuid())
   name        String
   description String?
-  price       Decimal
-  active      Boolean  @default(true)
+  type        PanelTypeEnum
+  maxUsers     Int?
+  active      Boolean    @default(true)
+  price       Decimal  @db.Decimal(10, 2)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
-  clinicPlans ClinicPlan[]
 
   @@index([active])
 }
 
 model Panel {
-  id          String     @id @default(uuid())
-  companyId   String
-  type        PanelTypeEnum
-  active      Boolean    @default(true)
-  openingTime DateTime?
-  closingTime DateTime?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id            String     @id @default(uuid())
+  companyId     String
+  type          PanelTypeEnum
+  active        PaymentStatus  @default(PENDING)
 
-  company     Company    @relation(fields: [companyId], references: [id])
-  clinicPlans ClinicPlan[]
+  billingPeriod Int     @default(3)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  company       Company    @relation(fields: [companyId], references: [id])
+  service       Service[]
+  petCompanies PetCompany[]
+  tutorCompanies TutorCompany[]
+  Appointment Appointment[]
 
   @@index([companyId])
   @@index([type])
+  Grooming Grooming[]
+  Selling Selling[]
+  HostingPet HostingPet[]
+  paymentOrders PaymentOrder[]
 }
 
-model ClinicPlan {
-  id           String   @id @default(uuid())
-  panelId      String
-  planId       String
-  billingPeriod Int     @default(3)
-  maxUsers     Int?
-  active       Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+model Service {
+  id          String              @id @default(uuid())
+  panelId     String
+  name        String              @db.VarChar(255)
+  description String?
+  category    ServiceCategoryEnum
+  duration    Int?                @default(30)
+  price       Decimal             @db.Decimal(10, 2) @default(0.0)
+  commission  Decimal?            @db.Decimal(10, 2) @default(0.0)
+  active      Boolean             @default(true)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
 
-  panel        Panel    @relation(fields: [panelId], references: [id])
-  plan         Plan     @relation(fields: [planId], references: [id])
+  panel       Panel               @relation(fields: [panelId], references: [id])
+  paymentItems PaymentItem[]
 
+  @@unique([panelId, name])
   @@index([panelId])
-  @@index([planId])
+  @@index([category])
 }
 
 //////////////////////////////////////////////////////////
@@ -331,75 +372,46 @@ model Product {
   name        String
   description String?
   type        ProductType
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  deletedAt   DateTime?
-
-  company     Company  @relation(fields: [companyId], references: [id])
-  batches     ProductBatch[]
-
-  @@unique([companyId, name])
-  @@index([companyId])
-  @@index([type])
-}
-
-model ProductBatch {
-  id             String   @id @default(uuid())
-  productId      String
   batchNumber    String?
   manufacturer   String?
   quantity       Int
-  pricePay       Decimal
-  priceSale      Decimal
+  pricePay       Decimal  @db.Decimal(10, 2) @default(0.0)
+  priceSale      Decimal  @db.Decimal(10, 2) @default(0.0)  
   expirationDate DateTime
-  validatedAt    DateTime?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  product Product @relation(fields: [productId], references: [id])
+  company       Company  @relation(fields: [companyId], references: [id])
   clinicVaccines ClinicVaccine[]
   medications Medication[]
   paymentItems PaymentItem[]
 
-  @@index([productId])
+  @@index([companyId])
+  @@index([type])
   @@index([expirationDate])
 }
+
 
 //////////////////////////////////////////////////////////
 // VACINAS
 //////////////////////////////////////////////////////////
 
-model VaccineType {
-  id             String      @id @default(uuid())
-  name           String
-  description    String?
-  species        SpeciesEnum
-  dosesRequired  Int         @default(1)
-  createdAt      DateTime    @default(now())
-  clinicVaccines ClinicVaccine[]
-}
-
 model ClinicVaccine {
   id             String   @id @default(uuid())
   clinicId       String
-  vaccineTypeId  String
-  productBatchId String
-  price          Decimal
-  quantity       Int
-  expirationDate DateTime
+  productId      String
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   active         Boolean  @default(true)
+  species        Int
 
   clinic        Company      @relation(fields: [clinicId], references: [id])
-  vaccineType   VaccineType  @relation(fields: [vaccineTypeId], references: [id])
-  productBatch  ProductBatch @relation(fields: [productBatchId], references: [id])
+  product       Product      @relation(fields: [productId], references: [id])
   vaccinations  Vaccination[]
 
-  @@unique([clinicId, vaccineTypeId, productBatchId])
+  @@unique([clinicId, productId])
   @@index([clinicId])
-  @@index([vaccineTypeId])
 }
 
 model Vaccination {
@@ -419,10 +431,6 @@ model Vaccination {
   company       Company      @relation(fields: [companyId], references: [id])
   clinicVaccine ClinicVaccine @relation(fields: [clinicVaccineId], references: [id])
 
-  @@index([petId])
-  @@index([companyId])
-  @@index([applicationDate])
-  @@index([nextDoseDate])
 }
 
 //////////////////////////////////////////////////////////
@@ -432,23 +440,41 @@ model Vaccination {
 model Appointment {
   id              String   @id @default(uuid())
   petId           String
-  companyId       String
-  paymentOrderId  String?
+  panelId         String
+  vetId           String?
+  paymentOrderId  String
   status          AppointmentStatusEnum @default(PENDING)
-  type            String?
+  type            Int
+  typeSpecialty   Int
+  description     String? @db.Text
   scheduledAt     DateTime?
+
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  pet          Pet          @relation(fields: [petId], references: [id])
-  company      Company      @relation(fields: [companyId], references: [id])
-  paymentOrder PaymentOrder? @relation(fields: [paymentOrderId], references: [id])
-  medications  Medication[]
+  pet             Pet          @relation(fields: [petId], references: [id])
+  panel           Panel         @relation(fields: [panelId], references: [id])
+  paymentOrder    PaymentOrder @relation(fields: [paymentOrderId], references: [id], onDelete: Cascade)
+  vet             UserProfileEmployee? @relation(fields: [vetId], references: [id], onDelete: Cascade)
+  medications     Medication[]
+  notesAppointments notesAppointment[]
 
   @@index([petId])
-  @@index([companyId])
+  @@index([panelId])
   @@index([status])
   @@index([scheduledAt])
+}
+
+model notesAppointment{
+  id              String   @id @default(uuid())
+  vetId           String?
+  appointmentId   String
+  description     String? @db.Text
+
+  vet             UserProfileEmployee? @relation(fields: [vetId], references: [id], onDelete: Cascade)
+  appointment     Appointment @relation(fields: [appointmentId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model Internation {
@@ -476,13 +502,90 @@ model Internation {
   @@index([startDate])
 }
 
+model Grooming {
+  id              String   @id @default(uuid())
+  panelId         String
+  petId           String
+  paymentOrderId  String?
+  status          InternationStatusEnum @default(IN_PROGRESS)
+  startDate       DateTime
+  endDate         DateTime?
+  description     String? @db.Text
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  panel           Panel            @relation(fields: [panelId], references: [id])
+  pet             Pet              @relation(fields: [petId], references: [id])
+  paymentOrder    PaymentOrder?    @relation(fields: [paymentOrderId], references: [id])
+  notesGroomings notesGrooming[]
+
+  @@index([petId])
+  @@index([panelId])
+  @@index([status])
+  @@index([startDate])
+}
+model notesGrooming{
+  id              String   @id @default(uuid())
+  vetId           String?
+  groomingId   String
+  description     String? @db.Text
+
+  vet             UserProfileEmployee? @relation(fields: [vetId], references: [id], onDelete: Cascade)
+  grooming         Grooming @relation(fields: [groomingId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+
+model Selling {
+  id              String   @id @default(uuid())
+  panelId         String
+  tutorId         String
+  paymentOrderId  String?
+  status          InternationStatusEnum @default(IN_PROGRESS)
+  startDate       DateTime
+  endDate         DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  panel           Panel            @relation(fields: [panelId], references: [id])
+  tutor           UserProfileTutor @relation(fields: [tutorId], references: [id])
+  paymentOrder    PaymentOrder?    @relation(fields: [paymentOrderId], references: [id])
+
+  @@index([panelId])
+  @@index([status])
+  @@index([startDate])
+}
+
+model HostingPet {
+  id              String   @id @default(uuid())
+  panelId         String
+  petId           String
+  tutorId         String
+  paymentOrderId  String?
+  status          InternationStatusEnum @default(IN_PROGRESS)
+  startDate       DateTime
+  endDate         DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  panel           Panel            @relation(fields: [panelId], references: [id])
+  paymentOrder    PaymentOrder?    @relation(fields: [paymentOrderId], references: [id])
+  pet             Pet              @relation(fields: [petId], references: [id])
+  tutor           UserProfileTutor @relation(fields: [tutorId], references: [id])
+  
+  @@index([panelId])
+  @@index([status])
+  @@index([startDate])
+}
+
 model Medication {
   id                String   @id @default(uuid())
   petId             String
   appointmentId     String?
   internationId     String?
   prescribedByVetId String?
-  productBatchId    String
+  productId         String
   dosage            String?
   dosageUnit        String?
   frequency         String?
@@ -498,7 +601,7 @@ model Medication {
   appointment     Appointment?       @relation(fields: [appointmentId], references: [id])
   internation     Internation?       @relation(fields: [internationId], references: [id])
   prescribedByVet UserProfileEmployee? @relation(fields: [prescribedByVetId], references: [id])
-  productBatch    ProductBatch       @relation(fields: [productBatchId], references: [id])
+  product         Product       @relation(fields: [productId], references: [id])
 
   @@index([petId])
   @@index([appointmentId])
@@ -512,19 +615,22 @@ model Medication {
 
 model PaymentOrder {
   id          String   @id @default(uuid())
-  companyId   String
-  amount      Decimal
+  panelId     String
+  amount      Decimal  @db.Decimal(10, 2) @default(0.0)
   status      PaymentStatus
   originType  PaymentOriginEnum
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  panel       Panel    @relation(fields: [panelId], references: [id])
 
-  company Company @relation(fields: [companyId], references: [id])
   items   PaymentItem[]
   appointments Appointment[]
   internations Internation[]
+  Grooming Grooming[]
+  Selling Selling[]
+  HostingPet HostingPet[]
 
-  @@index([companyId])
+  @@index([panelId])
   @@index([status])
   @@index([createdAt])
 }
@@ -532,16 +638,16 @@ model PaymentOrder {
 model PaymentItem {
   id              String   @id @default(uuid())
   paymentOrderId  String
-  productBatchId  String?
-  price           Decimal
-  quantity        Int
+  productId       String?
+  serviceId       String?
   createdAt       DateTime @default(now())
 
   paymentOrder PaymentOrder @relation(fields: [paymentOrderId], references: [id])
-  productBatch ProductBatch? @relation(fields: [productBatchId], references: [id])
+  product Product? @relation(fields: [productId], references: [id])
+  service Service? @relation(fields: [serviceId], references: [id])
 
   @@index([paymentOrderId])
-  @@index([productBatchId])
+  @@index([productId])
 }
 
 //////////////////////////////////////////////////////////

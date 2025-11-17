@@ -1,6 +1,6 @@
 /**
  * Mock do FastifyReply para Testes
- * 
+ *
  * Este arquivo contém o mock do FastifyReply usado nos testes do módulo de autenticação.
  */
 
@@ -22,9 +22,12 @@ export const mockFastifyReply = {
 export const resetFastifyReplyMock = () => {
   Object.values(mockFastifyReply).forEach((fn) => {
     if (typeof fn === 'function' && 'mockReset' in fn) {
-      (fn as jest.Mock).mockReset();
-      if (fn !== mockFastifyReply.setCookie && fn !== mockFastifyReply.clearCookie) {
-        (fn as jest.Mock).mockReturnThis();
+      fn.mockReset();
+      if (
+        fn !== mockFastifyReply.setCookie &&
+        fn !== mockFastifyReply.clearCookie
+      ) {
+        fn.mockReturnThis();
       }
     }
   });
@@ -36,7 +39,7 @@ export const resetFastifyReplyMock = () => {
 export const clearFastifyReplyMock = () => {
   Object.values(mockFastifyReply).forEach((fn) => {
     if (typeof fn === 'function' && 'mockClear' in fn) {
-      (fn as jest.Mock).mockClear();
+      fn.mockClear();
     }
   });
 };
@@ -52,4 +55,3 @@ export const createMockFastifyReply = () => ({
   code: jest.fn().mockReturnThis(),
   header: jest.fn().mockReturnThis(),
 });
-

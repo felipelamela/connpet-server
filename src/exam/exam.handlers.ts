@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ExamRepository } from './exam.repository';
 import { ExamEntity } from './entities/exam.entity';
-import { ErrorResponse } from '../commom/response/errorResponse';
-import { ErrorEnum } from '../commom/enum/error.enum';
+import { ErrorResponse } from '../common/response/errorResponse';
+import { ErrorEnum } from '../common/enum/error.enum';
 
 @Injectable()
 export class ExamHandlers {

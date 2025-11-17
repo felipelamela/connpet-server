@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../commom/prisma/prisma.service';
+import { PrismaService } from '../common/prisma/prisma.service';
 import { CreatePlanDto } from './dto/create-plan.dto';
 import { UpdatePlanDto } from './dto/update-plan.dto';
-import { ErrorResponse } from '../commom/response/errorResponse';
+import { CreatePanelClinicDto } from './dto/create-panel-clinic.dto';
+import { ErrorResponse } from '../common/response/errorResponse';
 
 @Injectable()
 export class PlansRepository {

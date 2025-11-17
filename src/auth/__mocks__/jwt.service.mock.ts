@@ -1,6 +1,6 @@
 /**
  * Mock do JwtService para Testes
- * 
+ *
  * Este arquivo contém o mock do serviço JWT usado nos testes do módulo de autenticação.
  */
 
@@ -28,7 +28,7 @@ export const mockConfigService = {
 export const resetJwtServiceMock = () => {
   Object.values(mockJwtService).forEach((fn) => {
     if (typeof fn === 'function' && 'mockReset' in fn) {
-      (fn as jest.Mock).mockReset();
+      fn.mockReset();
     }
   });
 };
@@ -39,7 +39,7 @@ export const resetJwtServiceMock = () => {
 export const clearJwtServiceMock = () => {
   Object.values(mockJwtService).forEach((fn) => {
     if (typeof fn === 'function' && 'mockClear' in fn) {
-      (fn as jest.Mock).mockClear();
+      fn.mockClear();
     }
   });
 };
@@ -48,14 +48,14 @@ export const clearJwtServiceMock = () => {
  * Função helper para resetar o mock do ConfigService
  */
 export const resetConfigServiceMock = () => {
-  (mockConfigService.get as jest.Mock).mockReset();
+  mockConfigService.get.mockReset();
 };
 
 /**
  * Função helper para limpar o mock do ConfigService
  */
 export const clearConfigServiceMock = () => {
-  (mockConfigService.get as jest.Mock).mockClear();
+  mockConfigService.get.mockClear();
 };
 
 /**
@@ -65,7 +65,9 @@ export const jwtServiceMockReturns = {
   /**
    * Configura o mock para gerar token com sucesso
    */
-  signAsyncSuccess: (token: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0ZUBleGVtcGxvLmNvbSIsIm5hbWUiOiJVc3XDoXJpbyBUZXN0ZSIsInJvbGUiOjEsInZldGVyaW5hcnlDbGluaWNJZCI6bnVsbCwiaWF0IjoxNjAwMDAwMDAwLCJleHAiOjE2MDAwODY0MDB9.signature') => {
+  signAsyncSuccess: (
+    token: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0ZUBleGVtcGxvLmNvbSIsIm5hbWUiOiJVc3XDoXJpbyBUZXN0ZSIsInJvbGUiOjEsInZldGVyaW5hcnlDbGluaWNJZCI6bnVsbCwiaWF0IjoxNjAwMDAwMDAwLCJleHAiOjE2MDAwODY0MDB9.signature',
+  ) => {
     mockJwtService.signAsync.mockResolvedValue(token);
   },
 
@@ -150,4 +152,3 @@ export const setupJwtServiceMock = (config: {
     }
   }
 };
-

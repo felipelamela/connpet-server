@@ -4,20 +4,16 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login.auth.dto';
-import { ErrorResponse } from '../commom/response/errorResponse';
-import { ErrorEnum } from '../commom/enum/error.enum';
+import { ErrorResponse } from '../common/response/errorResponse';
+import { ErrorEnum } from '../common/enum/error.enum';
 
 // Imports dos mocks e fixtures
 import {
   mockAuthService,
   clearAuthServiceMock,
 } from './__mocks__/auth.service.mock';
-import {
-  mockJwtService,
-} from './__mocks__/jwt.service.mock';
-import {
-  createMockFastifyReply,
-} from './__mocks__/fastify-reply.mock';
+import { mockJwtService } from './__mocks__/jwt.service.mock';
+import { createMockFastifyReply } from './__mocks__/fastify-reply.mock';
 import {
   mockLoginDto,
   mockAuthResponses,
@@ -191,7 +187,10 @@ describe('AuthController', () => {
         mockAuthService.login.mockRejectedValue(errorResponse);
 
         // Act
-        const result = await controller.login(mockLoginDto.invalidEmail, mockReply);
+        const result = await controller.login(
+          mockLoginDto.invalidEmail,
+          mockReply,
+        );
 
         // Assert
         expect(result).toBeInstanceOf(ErrorResponse);
@@ -208,7 +207,10 @@ describe('AuthController', () => {
         mockAuthService.login.mockRejectedValue(errorResponse);
 
         // Act
-        const result = await controller.login(mockLoginDto.invalidPassword, mockReply);
+        const result = await controller.login(
+          mockLoginDto.invalidPassword,
+          mockReply,
+        );
 
         // Assert
         expect(result).toBeInstanceOf(ErrorResponse);

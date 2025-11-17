@@ -3,7 +3,7 @@ import { CreateInternationDto } from './dto/create-internation.dto';
 import { UpdateInternationDto } from './dto/update-internation.dto';
 import { InternationHandlers } from './internation.handlers';
 import { InternationEntity } from './entities/internation.entity';
-import { ErrorResponse } from '../commom/response/errorResponse';
+import { ErrorResponse } from '../common/response/errorResponse';
 
 @Injectable()
 export class InternationService {
@@ -20,7 +20,9 @@ export class InternationService {
       });
 
       this.internationHandlers.validateInternationData(internationEntity);
-      return await this.internationHandlers.createInternationHandler(internationEntity);
+      return await this.internationHandlers.createInternationHandler(
+        internationEntity,
+      );
     } catch (error) {
       throw new ErrorResponse(error);
     }
@@ -44,7 +46,9 @@ export class InternationService {
 
   async findByPetId(petId: string) {
     try {
-      return await this.internationHandlers.findInternationsByPetIdHandler(petId);
+      return await this.internationHandlers.findInternationsByPetIdHandler(
+        petId,
+      );
     } catch (error) {
       throw new ErrorResponse(error);
     }
@@ -52,7 +56,9 @@ export class InternationService {
 
   async findByClinicId(clinicId: string) {
     try {
-      return await this.internationHandlers.findInternationsByClinicIdHandler(clinicId);
+      return await this.internationHandlers.findInternationsByClinicIdHandler(
+        clinicId,
+      );
     } catch (error) {
       throw new ErrorResponse(error);
     }
@@ -68,8 +74,7 @@ export class InternationService {
 
   async update(id: string, updateInternationDto: UpdateInternationDto) {
     try {
-      return ""
-
+      return '';
     } catch (error) {
       throw new ErrorResponse(error);
     }

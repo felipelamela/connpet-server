@@ -1,4 +1,3 @@
-
 import * as bcrypt from 'bcrypt';
 jest.mock('bcrypt');
 
@@ -60,4 +59,3 @@ export const setupBcryptMock = (config: {
     }
   }
 };
-

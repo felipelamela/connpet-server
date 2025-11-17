@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ResultExamRepository } from './result-exam.repository';
 import { ResultExamEntity } from './entities/result-exam.entity';
-import { ErrorResponse } from '../../../commom/response/errorResponse';
-import { ErrorEnum } from '../../../commom/enum/error.enum';
+import { ErrorResponse } from '../../../common/response/errorResponse';
+import { ErrorEnum } from '../../../common/enum/error.enum';
 
 @Injectable()
 export class ResultExamHandlers {
@@ -51,7 +51,9 @@ export class ResultExamHandlers {
 
   async findResultExamsByClinicIdHandler(clinicId: string) {
     try {
-      return await this.resultExamRepository.findResultExamsByClinicId(clinicId);
+      return await this.resultExamRepository.findResultExamsByClinicId(
+        clinicId,
+      );
     } catch (error) {
       throw new ErrorResponse(error);
     }
@@ -101,4 +103,3 @@ export class ResultExamHandlers {
     }
   }
 }
-

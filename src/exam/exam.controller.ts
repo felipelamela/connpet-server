@@ -7,16 +7,30 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBearerAuth,
+  ApiCookieAuth,
+} from '@nestjs/swagger';
 import { ExamService } from './exam.service';
 import { CreateExamDto } from './dto/create-exam.dto';
 import { UpdateExamDto } from './dto/update-exam.dto';
-import { SuccessResponse } from '../commom/response/successResponse';
-import { ErrorResponse } from '../commom/response/errorResponse';
+import { SuccessResponse } from '../common/response/successResponse';
+import { ErrorResponse } from '../common/response/errorResponse';
 
+@ApiTags('exams')
 @Controller('exam')
 export class ExamController {
   constructor(private readonly examService: ExamService) {}
 
+  @ApiOperation({ summary: 'Criar novo exame' })
+  @ApiResponse({ status: 201, description: 'Exame criado com sucesso' })
+  @ApiResponse({ status: 400, description: 'Dados inválidos' })
+  @ApiBearerAuth('JWT-auth')
+  @ApiCookieAuth('access_token')
   @Post()
   async create(@Body() createExamDto: CreateExamDto) {
     try {
@@ -38,6 +52,8 @@ export class ExamController {
   }
 
   @Get('pet/:petId')
+  @ApiOperation({ summary: 'Listar recursos' })
+  @ApiResponse({ status: 200, description: 'Lista de recursos' })
   async findByPetId(@Param('petId') petId: string) {
     try {
       const exams = await this.examService.findByPetId(petId);
@@ -48,6 +64,8 @@ export class ExamController {
   }
 
   @Get('clinic/:clinicId')
+  @ApiOperation({ summary: 'Listar recursos' })
+  @ApiResponse({ status: 200, description: 'Lista de recursos' })
   async findByClinicId(@Param('clinicId') clinicId: string) {
     try {
       const exams = await this.examService.findByClinicId(clinicId);
@@ -58,6 +76,8 @@ export class ExamController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Listar recursos' })
+  @ApiResponse({ status: 200, description: 'Lista de recursos' })
   async findOne(@Param('id') id: string) {
     try {
       const exam = await this.examService.findOne(id);
@@ -68,6 +88,9 @@ export class ExamController {
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Atualizar recurso' })
+  @ApiResponse({ status: 200, description: 'Recurso atualizado com sucesso' })
+  @ApiResponse({ status: 404, description: 'Recurso não encontrado' })
   async update(@Param('id') id: string, @Body() updateExamDto: UpdateExamDto) {
     try {
       const exam = await this.examService.update(id, updateExamDto);
@@ -78,6 +101,9 @@ export class ExamController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Excluir recurso' })
+  @ApiResponse({ status: 200, description: 'Recurso excluído com sucesso' })
+  @ApiResponse({ status: 404, description: 'Recurso não encontrado' })
   async remove(@Param('id') id: string) {
     try {
       const exam = await this.examService.remove(id);

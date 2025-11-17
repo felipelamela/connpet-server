@@ -3,7 +3,7 @@ import { ResultExamService } from './result-exam.service';
 import { ResultExamController } from './result-exam.controller';
 import { ResultExamRepository } from './result-exam.repository';
 import { ResultExamHandlers } from './result-exam.handlers';
-import { PrismaModule } from '../../../commom/prisma/prisma.module';
+import { PrismaModule } from '../../../common/prisma/prisma.module';
 
 @Module({
   imports: [PrismaModule],

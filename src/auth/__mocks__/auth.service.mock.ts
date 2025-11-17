@@ -5,7 +5,7 @@ export const mockAuthService = {
 export const resetAuthServiceMock = () => {
   Object.values(mockAuthService).forEach((fn) => {
     if (typeof fn === 'function' && 'mockReset' in fn) {
-      (fn as jest.Mock).mockReset();
+      fn.mockReset();
     }
   });
 };
@@ -13,7 +13,7 @@ export const resetAuthServiceMock = () => {
 export const clearAuthServiceMock = () => {
   Object.values(mockAuthService).forEach((fn) => {
     if (typeof fn === 'function' && 'mockClear' in fn) {
-      (fn as jest.Mock).mockClear();
+      fn.mockClear();
     }
   });
 };
@@ -47,4 +47,3 @@ export const setupAuthServiceMock = (config: {
     authServiceMockReturns.loginError(config.loginError);
   }
 };
-

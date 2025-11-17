@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
-import { PrismaService } from '../commom/prisma/prisma.service';
+import { PrismaService } from '../common/prisma/prisma.service';
 import { LoginAuthDto } from './dto/login.auth.dto';
-import { ErrorResponse } from '../commom/response/errorResponse';
-import { ErrorEnum } from '../commom/enum/error.enum';
+import { ErrorResponse } from '../common/response/errorResponse';
+import { ErrorEnum } from '../common/enum/error.enum';
 import * as bcrypt from 'bcrypt';
 
 // Imports dos mocks e fixtures
@@ -409,11 +409,11 @@ describe('AuthService', () => {
         // Arrange
         prismaServiceMockReturns.findUserSuccess(mockUsers.base);
         bcryptMockReturns.compareSuccess();
-        
+
         // Primeiro login
         jwtServiceMockReturns.signAsyncSuccess('token_unico_1');
         const result1 = await service.login(mockLoginDto.valid);
-        
+
         // Segundo login
         jest.clearAllMocks();
         clearJwtServiceMock();
@@ -440,8 +440,13 @@ describe('AuthService', () => {
         const result = await service.login(mockLoginDto.valid);
 
         // Assert
-        const requiredKeys = ['access_token', 'token_type', 'expires_in', 'user'];
-        requiredKeys.forEach(key => {
+        const requiredKeys = [
+          'access_token',
+          'token_type',
+          'expires_in',
+          'user',
+        ];
+        requiredKeys.forEach((key) => {
           expect(result).toHaveProperty(key);
         });
       });

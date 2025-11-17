@@ -3,7 +3,7 @@ import { InternationService } from './internation.service';
 import { InternationController } from './internation.controller';
 import { InternationRepository } from './internation.repository';
 import { InternationHandlers } from './internation.handlers';
-import { PrismaModule } from '../commom/prisma/prisma.module';
+import { PrismaModule } from '../common/prisma/prisma.module';
 
 @Module({
   imports: [PrismaModule],

@@ -29,17 +29,17 @@ export const mockPrismaService = {
 export const resetPrismaMocks = () => {
   Object.values(mockPrismaService.user).forEach((fn) => {
     if (typeof fn === 'function' && 'mockReset' in fn) {
-      (fn as jest.Mock).mockReset();
+      fn.mockReset();
     }
   });
   Object.values(mockPrismaService.userProfileEmployee).forEach((fn) => {
     if (typeof fn === 'function' && 'mockReset' in fn) {
-      (fn as jest.Mock).mockReset();
+      fn.mockReset();
     }
   });
   Object.values(mockPrismaService.userProfileTutor).forEach((fn) => {
     if (typeof fn === 'function' && 'mockReset' in fn) {
-      (fn as jest.Mock).mockReset();
+      fn.mockReset();
     }
   });
 };
@@ -47,17 +47,17 @@ export const resetPrismaMocks = () => {
 export const clearPrismaMocks = () => {
   Object.values(mockPrismaService.user).forEach((fn) => {
     if (typeof fn === 'function' && 'mockClear' in fn) {
-      (fn as jest.Mock).mockClear();
+      fn.mockClear();
     }
   });
   Object.values(mockPrismaService.userProfileEmployee).forEach((fn) => {
     if (typeof fn === 'function' && 'mockClear' in fn) {
-      (fn as jest.Mock).mockClear();
+      fn.mockClear();
     }
   });
   Object.values(mockPrismaService.userProfileTutor).forEach((fn) => {
     if (typeof fn === 'function' && 'mockClear' in fn) {
-      (fn as jest.Mock).mockClear();
+      fn.mockClear();
     }
   });
 };
@@ -83,4 +83,3 @@ export const prismaServiceMockReturns = {
     mockPrismaService.user.create.mockRejectedValue(error);
   },
 };
-

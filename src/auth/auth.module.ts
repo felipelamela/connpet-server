@@ -12,9 +12,12 @@ import { AuthController } from './auth.controller';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET') || 'connpet-jwt-secret-change-in-production',
+        secret:
+          configService.get<string>('JWT_SECRET') ||
+          'connpet-jwt-secret-change-in-production',
         signOptions: {
-          expiresIn: (configService.get<string>('JWT_EXPIRES_IN') || '24h') as any,
+          expiresIn: (configService.get<string>('JWT_EXPIRES_IN') ||
+            '24h') as any,
         },
       }),
     }),

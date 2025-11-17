@@ -5,12 +5,12 @@ import {
 } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
-import { ResponseInterceptor } from './commom/interceptors/response.interceptor';
-import { AllExceptionsFilter } from './commom/filters/all-exceptions.filter';
 import pinoHttp from 'pino-http';
-import logger from './commom/logger/logger';
+import logger from './common/logger/logger';
 import helmet from '@fastify/helmet';
 import fastifyCookie from '@fastify/cookie';
+import { setupSwagger } from './config/swagger.config';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -21,10 +21,12 @@ async function bootstrap() {
       bodyLimit: 1048576, // Limite de 1MB para body (proteção contra payload gigante)
     }),
   );
-
+  app.setGlobalPrefix('api');
   // Registrar plugin de cookies
   await app.register(fastifyCookie as any, {
-    secret: process.env.COOKIE_SECRET || 'connpet-cookie-secret-key-change-in-production',
+    secret:
+      process.env.COOKIE_SECRET ||
+      'connpet-cookie-secret-key-change-in-production',
   });
 
   // Helmet para segurança de headers HTTP
@@ -41,14 +43,17 @@ async function bootstrap() {
 
   // CORS configurado adequadamente
   app.enableCors({
-    origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000', 'http://localhost:3001'],
+    origin: process.env.ALLOWED_ORIGINS?.split(',') || [
+      'http://localhost:3000',
+      'http://localhost:3001',
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
     maxAge: 3600, // Cache de preflight
   });
 
   // Filtros e Interceptors Globais
-  app.useGlobalFilters(new AllExceptionsFilter()); // Captura todos os erros não tratados
+  // app.useGlobalFilters(new AllExceptionsFilter()); // Captura todos os erros não tratados
   // MetricsInterceptor está registrado como APP_INTERCEPTOR no app.module
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalPipes(
@@ -68,26 +73,15 @@ async function bootstrap() {
       },
     }),
   );
-  app.use(pinoHttp({ logger }));
+  // app.use(pinoHttp({ logger }));
+
+  // Configurar Swagger apenas em desenvolvimento
+  if (process.env.NODE_ENV !== 'production') {
+    setupSwagger(app);
+  }
 
   // Log de inicialização
   const port = process.env.PORT ?? 5000;
   await app.listen(port, '0.0.0.0');
-
-  console.log(`
-╔════════════════════════════════════════════════════════════╗
-║  🐾 ConnPet Server Iniciado com Sucesso!                   ║
-╠════════════════════════════════════════════════════════════╣
-║  🌐 Porta: ${String(port).padEnd(49)}║
-║  🛡️  Proteções Ativas:                                     ║
-║     ✅ Rate Limiting (100 req/min)                         ║
-║     ✅ Brute Force Protection (5 tentativas)               ║
-║     ✅ Helmet Security Headers                             ║
-║     ✅ CORS Configurado (credentials: true)                ║
-║     ✅ Cookies HttpOnly + Secure + SameSite                ║
-║     ✅ Body Limit (1MB)                                    ║
-║     ✅ IP Tracking                                         ║
-╚════════════════════════════════════════════════════════════╝
-  `);
 }
 bootstrap();

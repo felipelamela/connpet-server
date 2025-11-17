@@ -61,7 +61,9 @@ export class CreateTutorDTO {
   @MaxLength(100, { message: 'A cidade pode ter no máximo 100 caracteres.' })
   city: string;
 
-  @IsEnum(StateEnum, { message: 'O estado deve ser um estado válido do Brasil.' })
+  @IsEnum(StateEnum, {
+    message: 'O estado deve ser um estado válido do Brasil.',
+  })
   @IsNotEmpty({ message: 'O estado é obrigatório.' })
   state: StateEnum;
 

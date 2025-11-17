@@ -3,7 +3,7 @@ import { CreateExamDto } from './dto/create-exam.dto';
 import { UpdateExamDto } from './dto/update-exam.dto';
 import { ExamHandlers } from './exam.handlers';
 import { ExamEntity } from './entities/exam.entity';
-import { ErrorResponse } from '../commom/response/errorResponse';
+import { ErrorResponse } from '../common/response/errorResponse';
 
 @Injectable()
 export class ExamService {

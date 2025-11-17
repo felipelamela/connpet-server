@@ -3,7 +3,7 @@ import { CreateResultExamDto } from './dto/create-result-exam.dto';
 import { UpdateResultExamDto } from './dto/update-result-exam.dto';
 import { ResultExamHandlers } from './result-exam.handlers';
 import { ResultExamEntity } from './entities/result-exam.entity';
-import { ErrorResponse } from '../../../commom/response/errorResponse';
+import { ErrorResponse } from '../../../common/response/errorResponse';
 
 @Injectable()
 export class ResultExamService {
@@ -16,7 +16,9 @@ export class ResultExamService {
       });
 
       this.resultExamHandlers.validateResultExamData(resultExamEntity);
-      return await this.resultExamHandlers.createResultExamHandler(resultExamEntity);
+      return await this.resultExamHandlers.createResultExamHandler(
+        resultExamEntity,
+      );
     } catch (error) {
       throw new ErrorResponse(error);
     }
@@ -40,7 +42,9 @@ export class ResultExamService {
 
   async findByExamId(examId: string) {
     try {
-      return await this.resultExamHandlers.findResultExamsByExamIdHandler(examId);
+      return await this.resultExamHandlers.findResultExamsByExamIdHandler(
+        examId,
+      );
     } catch (error) {
       throw new ErrorResponse(error);
     }
@@ -48,7 +52,9 @@ export class ResultExamService {
 
   async findByClinicId(clinicId: string) {
     try {
-      return await this.resultExamHandlers.findResultExamsByClinicIdHandler(clinicId);
+      return await this.resultExamHandlers.findResultExamsByClinicIdHandler(
+        clinicId,
+      );
     } catch (error) {
       throw new ErrorResponse(error);
     }
@@ -60,7 +66,10 @@ export class ResultExamService {
         ...updateResultExamDto,
       };
 
-      return await this.resultExamHandlers.updateResultExamHandler(id, updateData);
+      return await this.resultExamHandlers.updateResultExamHandler(
+        id,
+        updateData,
+      );
     } catch (error) {
       throw new ErrorResponse(error);
     }

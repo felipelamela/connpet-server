@@ -2,14 +2,21 @@ import { Module } from '@nestjs/common';
 import { TutorService } from './tutor.service';
 import { TutorController } from './tutor.controller';
 import TutorRepository from './tutor.repository';
-import { AddressModule } from '../address/address.module';
-import { UserModule } from '../user/user.module';
 import { PetService } from '../pet/pet.service';
 import { PetModule } from '../pet/pet.module';
+import { AddressService } from 'src/services/address/address.service';
+import { UserService } from 'src/services/user/user.service';
+import PetRepository from 'src/pet/pet.repository';
 
 @Module({
-  imports: [AddressModule, UserModule, PetModule],
+  imports: [PetModule],
   controllers: [TutorController],
-  providers: [TutorService, TutorRepository, PetService],
+  providers: [
+    TutorService,
+    TutorRepository,
+    AddressService,
+    UserService,
+    PetRepository
+  ],
 })
 export class TutorModule {}

@@ -1,7 +1,7 @@
 import { Module, Global } from '@nestjs/common';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { SmartThrottlerGuard } from '../commom/guards/smart-throttler.guard';
+import { SmartThrottlerGuard } from 'src/common/guards/smart-throttler.guard';
 
 @Global()
 @Module({
@@ -14,7 +14,7 @@ import { SmartThrottlerGuard } from '../commom/guards/smart-throttler.guard';
       },
       {
         name: 'medium',
-        ttl: 10000, // 10 segundos  
+        ttl: 10000, // 10 segundos
         limit: 100, // 100 requisições por 10 segundos (aumentado)
       },
       {
@@ -33,4 +33,3 @@ import { SmartThrottlerGuard } from '../commom/guards/smart-throttler.guard';
   exports: [ThrottlerModule],
 })
 export class SecurityModule {}
-

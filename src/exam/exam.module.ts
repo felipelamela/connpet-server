@@ -4,7 +4,7 @@ import { ExamController } from './exam.controller';
 import { ExamRepository } from './exam.repository';
 import { ExamHandlers } from './exam.handlers';
 import { ResultExamModule } from './module/result-exam/result-exam.module';
-import { PrismaModule } from '../commom/prisma/prisma.module';
+import { PrismaModule } from '../common/prisma/prisma.module';
 
 @Module({
   imports: [ResultExamModule, PrismaModule],

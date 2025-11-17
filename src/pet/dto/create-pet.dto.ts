@@ -10,7 +10,7 @@ import {
   MaxLength,
   IsEnum,
 } from 'class-validator';
-import { SpeciesEnum, GenderEnum } from '@prisma/client';
+import { GenderEnum } from '@prisma/client';
 
 export class CreatePetDto {
   @IsString()
@@ -18,9 +18,9 @@ export class CreatePetDto {
   @MaxLength(100)
   name: string;
 
-  @IsEnum(SpeciesEnum)
+  @IsNumber()
   @IsNotEmpty()
-  species: SpeciesEnum;
+  species: number;
 
   @IsInt()
   breed: number;

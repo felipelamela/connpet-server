@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InternationRepository } from './internation.repository';
 import { InternationEntity } from './entities/internation.entity';
-import { ErrorResponse } from '../commom/response/errorResponse';
-import { ErrorEnum } from '../commom/enum/error.enum';
+import { ErrorResponse } from '../common/response/errorResponse';
+import { ErrorEnum } from '../common/enum/error.enum';
 
 @Injectable()
 export class InternationHandlers {
@@ -26,7 +26,8 @@ export class InternationHandlers {
 
   async findInternationByIdHandler(id: string) {
     try {
-      const internation = await this.internationRepository.findInternationById(id);
+      const internation =
+        await this.internationRepository.findInternationById(id);
       if (!internation) {
         throw new ErrorResponse({
           message: 'Internação não encontrada',
@@ -51,7 +52,9 @@ export class InternationHandlers {
 
   async findInternationsByClinicIdHandler(clinicId: string) {
     try {
-      return await this.internationRepository.findInternationsByClinicId(clinicId);
+      return await this.internationRepository.findInternationsByClinicId(
+        clinicId,
+      );
     } catch (error) {
       throw new ErrorResponse(error);
     }
@@ -126,10 +129,11 @@ export class InternationHandlers {
       // Valida se a data de início não é futura demais
       const now = new Date();
       const startDate = new Date(data.startDate);
-      
+
       if (startDate > now) {
         // Permite até 24 horas no futuro para agendamentos
-        const diffInHours = (startDate.getTime() - now.getTime()) / (1000 * 60 * 60);
+        const diffInHours =
+          (startDate.getTime() - now.getTime()) / (1000 * 60 * 60);
         if (diffInHours > 24) {
           throw new ErrorResponse({
             message: 'Data de início não pode ser mais de 24 horas no futuro',
@@ -157,4 +161,3 @@ export class InternationHandlers {
     }
   }
 }
-

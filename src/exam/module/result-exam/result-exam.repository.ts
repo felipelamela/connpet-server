@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../commom/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 import { ResultExamEntity } from './entities/result-exam.entity';
-import { ErrorResponse } from '../../../commom/response/errorResponse';
+import { ErrorResponse } from '../../../common/response/errorResponse';
 
 @Injectable()
 export class ResultExamRepository {
@@ -153,4 +153,3 @@ export class ResultExamRepository {
     }
   }
 }
-

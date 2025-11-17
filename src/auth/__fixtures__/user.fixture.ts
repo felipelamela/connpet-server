@@ -148,10 +148,13 @@ export const testPasswords = {
  * Tokens JWT para testes
  */
 export const mockJwtTokens = {
-  valid: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0ZUBleGVtcGxvLmNvbSIsIm5hbWUiOiJVc3XDoXJpbyBUZXN0ZSIsInJvbGUiOjEsInZldGVyaW5hcnlDbGluaWNJZCI6bnVsbCwiaWF0IjoxNjAwMDAwMDAwLCJleHAiOjE2MDAwODY0MDB9.signature',
-  expired: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0ZUBleGVtcGxvLmNvbSIsIm5hbWUiOiJVc3XDoXJpbyBUZXN0ZSIsInJvbGUiOjEsInZldGVyaW5hcnlDbGluaWNJZCI6bnVsbCwiaWF0IjoxNTAwMDAwMDAwLCJleHAiOjE1MDAwODY0MDB9.signature',
+  valid:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0ZUBleGVtcGxvLmNvbSIsIm5hbWUiOiJVc3XDoXJpbyBUZXN0ZSIsInJvbGUiOjEsInZldGVyaW5hcnlDbGluaWNJZCI6bnVsbCwiaWF0IjoxNjAwMDAwMDAwLCJleHAiOjE2MDAwODY0MDB9.signature',
+  expired:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0ZUBleGVtcGxvLmNvbSIsIm5hbWUiOiJVc3XDoXJpbyBUZXN0ZSIsInJvbGUiOjEsInZldGVyaW5hcnlDbGluaWNJZCI6bnVsbCwiaWF0IjoxNTAwMDAwMDAwLCJleHAiOjE1MDAwODY0MDB9.signature',
   invalid: 'invalid.token.here',
-  differentUser: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGVtcGxvLmNvbSIsIm5hbWUiOiJVc3XDoXJpbyBBZG1pbiIsInJvbGUiOjIsInZldGVyaW5hcnlDbGluaWNJZCI6bnVsbCwiaWF0IjoxNjAwMDAwMDAwLCJleHAiOjE2MDAwODY0MDB9.signature',
+  differentUser:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbkBleGVtcGxvLmNvbSIsIm5hbWUiOiJVc3XDoXJpbyBBZG1pbiIsInJvbGUiOjIsInZldGVyaW5hcnlDbGluaWNJZCI6bnVsbCwiaWF0IjoxNjAwMDAwMDAwLCJleHAiOjE2MDAwODY0MDB9.signature',
 };
 
 /**
@@ -212,4 +215,3 @@ export const mockJwtPayloads = {
     veterinaryClinicId: mockUserWithDifferentRole.veterinaryClinicId,
   },
 };
-

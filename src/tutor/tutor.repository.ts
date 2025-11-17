@@ -1,20 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../commom/prisma/prisma.service';
-import { ErrorResponse } from '../commom/response/errorResponse';
-
-interface ITutor {
-  userId: string;
-  addressId: string | null;
-  document: string | null;
-  phone: string | null;
-}
+import { PrismaService } from '../common/prisma/prisma.service';
+import { ErrorResponse } from '../common/response/errorResponse';
+import { TutorEntity } from './entities/tutor.entity';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export default class TutorRepository {
   constructor(private readonly prisma: PrismaService) {}
-  async create(data: ITutor) {
+  async create(data: TutorEntity, tx?: Prisma.TransactionClient) {
     try {
-      return await this.prisma.userProfileTutor.create({
+      const client = tx || this.prisma;
+      return await client.userProfileTutor.create({
         data: data,
       });
     } catch (error) {
@@ -37,6 +33,21 @@ export default class TutorRepository {
     } catch (error) {
       throw new ErrorResponse({
         message: 'Erro ao buscar tutor',
+        errorsCode: error.code,
+        details: error.meta,
+        statusCode: 400,
+      });
+    }
+  }
+  async createTutorCompany(data: { tutorId: string; panelId: string }, tx?: Prisma.TransactionClient) {
+    try {
+      const client = tx || this.prisma;
+      return await client.tutorCompany.create({
+        data: data,
+      });
+    } catch (error) {
+      throw new ErrorResponse({
+        message: 'Erro ao cadastrar Tutor Company',
         errorsCode: error.code,
         details: error.meta,
         statusCode: 400,

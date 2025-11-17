@@ -1,4 +1,4 @@
-import { Pet, UserProfileEmployee, UserProfileTutor } from "@prisma/client";
+import { Pet, UserProfileEmployee, UserProfileTutor } from '@prisma/client';
 
 export class AuthUserPresenter {
   expiresIn: number;

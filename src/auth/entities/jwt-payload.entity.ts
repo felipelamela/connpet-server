@@ -1,4 +1,4 @@
-import { RoleEnum } from '@prisma/client';
+import { PanelTypeEnum, RoleEnum } from '@prisma/client';
 
 export class JwtPayload {
   sub: string;
@@ -6,6 +6,9 @@ export class JwtPayload {
   name: string;
   role: RoleEnum | null;
   companyId?: string | null;
+  panelId?: string | null;
+  panelType?: PanelTypeEnum | null;
+  panels?: {id:string, type:PanelTypeEnum}[] | null;
   iat?: number;
   exp?: number;
   constructor(partial: Partial<JwtPayload>) {
@@ -23,6 +26,8 @@ export interface AuthResponse {
     email: string;
     role: RoleEnum | null;
     companyId?: string | null;
+    panelId?: string | null;
+    panelType?: PanelTypeEnum | null;
+    panels?: {id:string, type:PanelTypeEnum}[] | null;
   };
 }
-
