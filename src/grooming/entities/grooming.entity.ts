@@ -1,7 +1,6 @@
 import { InternationStatusEnum } from '@prisma/client';
 
 export class GroomingEntity {
-  id?: string;
   petId: string;
   panelId: string;
   paymentOrderId?: string;

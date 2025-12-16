@@ -8,149 +8,25 @@ import { PaymentOriginEnum, PaymentStatus, Prisma } from '@prisma/client';
 export class GroomingRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createGrooming(data: GroomingEntity, serviceId?: string) {
+  async createGrooming(data: GroomingEntity, serviceId: string) {
     try {
-      const groomingData: any = {
-        petId: data.petId,
-        panelId: data.panelId,
-        status: data.status,
-        startDate: data.startDate,
-        endDate: data.endDate,
-        description: data.description,
-      };
-
-      // Se houver serviceId, criar paymentOrder e paymentItem
-      if (serviceId) {
-        const paymentItem = await this.prisma.paymentItem.create({
-          data: {
-            service: {
-              connect: { id: serviceId }
-            },
-            paymentOrder: {
-              create: {
-                panelId: data.panelId,
-                originType: PaymentOriginEnum.CLINIC,
-                status: PaymentStatus.PENDING,
-                Grooming: {
-                  create: groomingData
-                }
+      return await this.prisma.paymentItem.create({
+        data: {
+          service: {
+            connect: { id: serviceId }
+          },
+          paymentOrder: {
+            create: {
+              panelId: data.panelId,
+              originType: PaymentOriginEnum.CLINIC,
+              status: PaymentStatus.PENDING,
+              Grooming: {
+                create: data
               }
             }
-          },
-        });
-
-        // Buscar o grooming criado com todos os relacionamentos
-        const paymentOrder = await this.prisma.paymentOrder.findUnique({
-          where: { id: paymentItem.paymentOrderId },
-          include: {
-            Grooming: {
-              include: {
-                pet: {
-                  include: {
-                    tutor: {
-                      include: {
-                        user: {
-                          select: {
-                            id: true,
-                            name: true,
-                            email: true,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-                panel: {
-                  include: {
-                    company: true,
-                  },
-                },
-                notesGroomings: {
-                  include: {
-                    vet: {
-                      include: {
-                        user: {
-                          select: {
-                            id: true,
-                            name: true,
-                            email: true,
-                          },
-                        },
-                      },
-                    },
-                  },
-                  orderBy: {
-                    createdAt: 'desc',
-                  },
-                },
-              },
-            },
-            items: {
-              include: {
-                service: true,
-                product: true,
-              },
-            },
-          },
-        });
-
-        return paymentOrder?.Grooming?.[0] || null;
-      } else {
-        // Criar grooming sem paymentOrder
-        return await this.prisma.grooming.create({
-          data: groomingData,
-          include: {
-            pet: {
-              include: {
-                tutor: {
-                  include: {
-                    user: {
-                      select: {
-                        id: true,
-                        name: true,
-                        email: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            panel: {
-              include: {
-                company: true,
-              },
-            },
-            paymentOrder: {
-              include: {
-                items: {
-                  include: {
-                    service: true,
-                    product: true,
-                  },
-                },
-              },
-            },
-            notesGroomings: {
-              include: {
-                vet: {
-                  include: {
-                    user: {
-                      select: {
-                        id: true,
-                        name: true,
-                        email: true,
-                      },
-                    },
-                  },
-                },
-              },
-              orderBy: {
-                createdAt: 'desc',
-              },
-            },
-          },
-        });
-      }
+          }
+        },
+      });
     } catch (error) {
       throw new ErrorResponse({
         message: 'Erro ao criar grooming',
@@ -285,11 +161,6 @@ export class GroomingRepository {
                   },
                 },
               },
-            },
-          },
-          panel: {
-            include: {
-              company: true,
             },
           },
           paymentOrder: {

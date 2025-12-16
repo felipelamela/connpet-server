@@ -10,21 +10,13 @@ export class CreateGroomingDto {
   @IsUUID()
   petId: string;
 
-  @ApiPropertyOptional({
-    description: 'ID do painel',
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
-  @IsOptional()
-  @IsUUID()
-  panelId?: string;
 
   @ApiPropertyOptional({
     description: 'ID do serviço',
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
-  @IsOptional()
   @IsUUID()
-  serviceId?: string;
+  serviceId: string;
 
   @ApiPropertyOptional({
     description: 'Status do grooming',
@@ -32,9 +24,8 @@ export class CreateGroomingDto {
     example: InternationStatusEnum.IN_PROGRESS,
     default: InternationStatusEnum.IN_PROGRESS,
   })
-  @IsOptional()
   @IsEnum(InternationStatusEnum)
-  status?: InternationStatusEnum;
+  status: InternationStatusEnum;
 
   @ApiProperty({
     description: 'Data e hora de início do grooming',

@@ -28,13 +28,12 @@ export class GroomingService {
 
       const groomingEntity = new GroomingEntity({
         ...createGroomingDto,
-        panelId: createGroomingDto.panelId || user.panelId,
+        panelId: user.panelId,
         status: createGroomingDto.status || InternationStatusEnum.IN_PROGRESS,
         startDate: new Date(createGroomingDto.startDate),
         endDate: createGroomingDto.endDate ? new Date(createGroomingDto.endDate) : undefined,
       });
 
-      this.groomingHandlers.validateGroomingData(groomingEntity);
 
       return await this.groomingRepository.createGrooming(
         groomingEntity,
